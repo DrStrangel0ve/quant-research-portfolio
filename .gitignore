@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+dist/
+build/
+projects/**/results/*.png
+projects/**/results/*.csv
+projects/**/results/*.json
+!projects/**/results/.gitkeep

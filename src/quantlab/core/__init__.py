@@ -1,0 +1,1 @@
+"""Core statistics and validation."""
