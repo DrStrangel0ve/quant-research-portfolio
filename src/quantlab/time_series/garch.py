@@ -41,7 +41,10 @@ def _variance_path(values: FloatArray, omega: float, alpha: float, beta: float) 
 
 def fit_garch_11(returns: pd.Series) -> GarchFit:
     """Fit zero-mean Gaussian GARCH(1,1) to decimal returns."""
-    values = returns.astype(float).dropna().to_numpy()
+    values = np.asarray(
+        returns.astype(float).dropna().to_numpy(),
+        dtype=np.float64,
+    )
     if len(values) < 30:
         raise ValueError("at least 30 observations are required")
     if not np.isfinite(values).all():
