@@ -91,6 +91,31 @@ main {
   gap: 8px;
 }
 
+.mode-switch {
+  border: 1px solid var(--line);
+  display: flex;
+  padding: 3px;
+}
+
+.mode-switch button {
+  background: transparent;
+  border: 0;
+  color: #728077;
+  cursor: pointer;
+  font: 700 8px/1 var(--mono);
+  letter-spacing: 0.1em;
+  padding: 10px 12px;
+}
+
+.mode-switch button:hover {
+  color: var(--ivory);
+}
+
+.mode-switch button.active {
+  background: var(--orange);
+  color: var(--ink);
+}
+
 .live-dot {
   background: #78c795;
   border-radius: 50%;
@@ -150,6 +175,10 @@ main {
   color: var(--orange);
   font-style: italic;
   font-weight: 400;
+}
+
+.micro-hero h1 em {
+  color: #f0c674;
 }
 
 .lede {
@@ -478,6 +507,53 @@ main {
   width: 65px;
 }
 
+.micro-table {
+  height: 530px;
+}
+
+.micro-board,
+.hole-cards {
+  display: flex;
+}
+
+.micro-board {
+  gap: 7px;
+}
+
+.hole-cards {
+  min-width: 86px;
+}
+
+.hole-cards .playing-card {
+  height: 68px;
+  width: 48px;
+}
+
+.hole-cards .playing-card + .playing-card {
+  margin-left: -12px;
+  transform: translateY(5px);
+}
+
+.micro-seat > div:last-child {
+  min-width: 130px;
+}
+
+.micro-actions {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.micro-probabilities > div {
+  grid-template-columns: 55px 1fr 35px;
+}
+
+.micro-probabilities > small {
+  color: #f0c674;
+  display: block;
+  font: 8px/1.4 var(--mono);
+  letter-spacing: 0.08em;
+  margin-top: 14px;
+}
+
 .pot-label {
   color: #c6d0c8;
   font: 9px/1 var(--mono);
@@ -786,6 +862,11 @@ footer {
     display: none;
   }
 
+  .mode-switch button {
+    font-size: 7px;
+    padding: 9px 8px;
+  }
+
   .hero-copy {
     padding-bottom: 38px;
     padding-top: 45px;
@@ -832,6 +913,10 @@ footer {
 
   .poker-table {
     height: 470px;
+  }
+
+  .micro-table {
+    height: 510px;
   }
 
   .player-seat > div:last-child {
@@ -899,6 +984,10 @@ footer {
 
   .action-deck {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .micro-actions {
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .action-deck button.next-hand {

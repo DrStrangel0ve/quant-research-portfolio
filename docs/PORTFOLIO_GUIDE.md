@@ -19,6 +19,9 @@ Start with:
 4. **Risk parity** — covariance estimation error, shrinkage, and component risk.
 5. **Poker CFR+ lab** — counterfactual regret, exact exploitability, imperfect
    information, and why a head-to-head win is not an equilibrium certificate.
+6. **Neural poker solver** — external sampling, reservoir replay,
+   suit-isomorphic features, Bayesian ranges, and the boundary between a
+   blueprint rollout and theoretically safe continual resolving.
 
 Strong discussion prompt: *What additional evidence would change this from a
 mechanism demonstration into a defensible empirical claim?*
@@ -50,7 +53,8 @@ Start with:
 4. **CI and tests** — multi-version checks, strict typing, temporal-invariance
    tests, and reproducible commands.
 5. **Poker engine and arena** — immutable transitions, Python/RLCard parity,
-   checkpoint serialization, and a deployable policy debugger.
+   checkpoint serialization, cross-runtime neural inference, and a deployable
+   policy debugger.
 
 Strong discussion prompt: *Which abstractions would need to change for
 event-driven, multi-venue, asynchronous production use?*
@@ -62,8 +66,9 @@ concise draft:
 
 > Built a typed quantitative-research portfolio spanning derivatives, market
 > microstructure, systematic strategies, portfolio risk, probability, and
-> imperfect-information games; added a from-scratch CFR+ poker solver with
-> exact best-response auditing and an interactive trained-policy arena.
+> imperfect-information games; built exact CFR+ and neural CFR poker solvers
+> with best-response auditing, duplicate evaluation, Bayesian range search,
+> and an interactive cross-runtime policy arena.
 
 Avoid quoting synthetic Sharpe ratios or small-game poker win rates as real-world
 performance achievements. The stronger signal is that the framework exposes

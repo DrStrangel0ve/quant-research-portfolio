@@ -10,6 +10,7 @@ htmlcov/
 node_modules/
 .wrangler/
 *.log
+*.tsbuildinfo
 dist/
 build/
 !projects/14_poker_bot_arena/build/

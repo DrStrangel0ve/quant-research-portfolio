@@ -53,10 +53,14 @@ strategy promotion.
 | CFR+ vs RLCard CFR | +0.13596 BB/hand | Exact enumeration, either seat |
 | Duplicate face-off | +0.10673 BB/hand | 10,000 pairs; 95% CI [0.06749, 0.14596] |
 | CFR+ vs uniform random | +0.73821 BB/hand | Exact enumeration |
+| Neural CFR vs uniform random | +0.61313 BB/hand | 2,000 duplicate pairs; 95% CI [+0.39265, +0.83360] |
+| Neural CFR vs calling station | +0.36713 BB/hand | 2,000 duplicate pairs; 95% CI [+0.08077, +0.65348] |
+| Neural CFR vs pot pressure | +0.26175 BB/hand | 2,000 duplicate pairs; inconclusive 95% CI [-0.06731, +0.59081] |
 
-The poker figures are for six-card heads-up Leduc Hold'em. They demonstrate a
-reproducible game-solving pipeline and are not claims about no-limit Texas
-Hold'em or real-money performance.
+The first four poker figures are for six-card heads-up Leduc Hold'em. The neural
+figures are for the synthetic 24-card Royal Micro Hold'em benchmark. They
+demonstrate a reproducible game-solving pipeline and are not claims about full
+no-limit Texas Hold'em or real-money performance.
 
 ## Verification command
 
@@ -65,6 +69,7 @@ python -m ruff check .
 python -m mypy
 python -m pytest
 python scripts/run_all.py
+python projects/15_neural_poker_solver/run.py
 cd projects/14_poker_bot_arena && npm test && npm run lint
 ```
 

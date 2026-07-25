@@ -9,22 +9,22 @@ export async function generateMetadata(): Promise<Metadata> {
   const metadataBase = new URL(host ? `${protocol}://${host}` : "https://poker-lab.invalid");
   return {
     metadataBase,
-    title: "Poker Lab — Play the CFR+ Policy",
+    title: "Poker Lab — Exact CFR+ and Neural No-Limit",
     description:
-      "Play heads-up Leduc Hold'em against a from-scratch CFR+ bot, RLCard's reference checkpoint, and exact or heuristic opponents.",
+      "Play exact Leduc CFR+ or Royal Micro Hold'em against neural CFR, belief-aware search, and interpretable baselines.",
     icons: {
       icon: "/og.png",
     },
     openGraph: {
       title: "Poker Lab — Play the Policy",
-      description: "A trained, exactly audited imperfect-information poker arena.",
+      description: "Exact small-game audit meets neural no-limit poker research.",
       images: [{ url: "/og.png", width: 1200, height: 630, alt: "Poker Lab" }],
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title: "Poker Lab — Play the Policy",
-      description: "CFR+, exact audit, and six playable opponents.",
+      title: "Poker Lab — Exact and Neural Poker",
+      description: "CFR+, neural CFR, range search, and eleven playable opponents.",
       images: ["/og.png"],
     },
   };

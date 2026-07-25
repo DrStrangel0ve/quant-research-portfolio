@@ -13,6 +13,7 @@ import {
   type LeducGame,
   type PokerAction,
 } from "./game";
+import { MicroArena } from "./micro-arena";
 
 type BotId =
   | "cfr"
@@ -94,6 +95,15 @@ const ACTION_SHORTCUTS: Partial<Record<string, PokerAction>> = {
 };
 
 export default function Home() {
+  const [mode, setMode] = useState<"leduc" | "micro">("leduc");
+  return mode === "micro" ? (
+    <MicroArena onSwitch={() => setMode("leduc")} />
+  ) : (
+    <LeducArena onSwitch={() => setMode("micro")} />
+  );
+}
+
+function LeducArena({ onSwitch }: { onSwitch: () => void }) {
   const [policies, setPolicies] = useState<ArenaPolicies | null>(null);
   const [selectedBot, setSelectedBot] = useState<BotId>("cfr");
   const [game, setGame] = useState<LeducGame>(() => createGame(0));
@@ -189,10 +199,9 @@ export default function Home() {
           <span className="brand-mark">PL</span>
           <span>POKER LAB</span>
         </a>
-        <div className="header-proof">
-          <span><i className="live-dot" /> CHECKPOINT LOADED</span>
-          <span>20,000 ITERATIONS</span>
-          <span>0.042 EXPLOITABILITY</span>
+        <div className="mode-switch" aria-label="Select poker benchmark">
+          <button className="active">LEDUC / EXACT</button>
+          <button onClick={onSwitch}>MICRO NL / NEURAL</button>
         </div>
         <a
           className="source-link"

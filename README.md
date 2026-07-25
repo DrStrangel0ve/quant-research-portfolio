@@ -27,6 +27,7 @@ execution frictions, and experiments that can be challenged in an interview.
 | 12 | [Kelly and optimal stopping](projects/12_kelly_and_stopping/README.md) | Probability | Log-optimal sizing and the secretary problem |
 | 13 | [Poker CFR+ lab](projects/13_poker_cfr_lab/README.md) | Game theory | From-scratch CFR+, exact best response, and RLCard face-off |
 | 14 | [Playable poker bot arena](projects/14_poker_bot_arena/README.md) | Interactive research | Human play against trained, reference, exact, and heuristic bots |
+| 15 | [Neural poker solver](projects/15_neural_poker_solver/README.md) | Game theory / ML | Deep CFR, suit-canonical features, Bayesian ranges, and rollout search |
 
 ## Research safeguards
 
@@ -58,6 +59,8 @@ python -m pip install -e ".[dev]"
 python -m pytest
 python projects/01_option_pricing/run.py
 python projects/13_poker_cfr_lab/run.py
+python -m pip install -e ".[neural-poker]"
+python projects/15_neural_poker_solver/run.py
 python scripts/run_all.py
 ```
 
@@ -70,7 +73,8 @@ that the documented experiment is reproducible.
 ```text
 src/quantlab/        reusable, tested research components
 projects/            independent experiments and project notes
-projects/14_*/       deployable TypeScript poker arena
+projects/14_*/       deployable exact and neural TypeScript poker arena
+projects/15_*/       optional PyTorch game-solving experiment
 tests/               unit, invariant, and anti-look-ahead tests
 .github/workflows/   Python 3.11/3.12 quality gates
 ```
@@ -83,4 +87,5 @@ market maker, instability of a rolling pairs hedge ratio, turnover drag in
 momentum, covariance estimation error in risk parity, and over-betting under
 parameter uncertainty in Kelly sizing. For game-theory roles, discuss why the
 poker bot reports exact exploitability rather than only a head-to-head win rate,
-and why Leduc results do not imply frontier no-limit Hold'em performance.
+why Leduc results do not imply frontier no-limit Hold'em performance, and why
+the larger neural game switches to explicitly approximate cross-play and search.
