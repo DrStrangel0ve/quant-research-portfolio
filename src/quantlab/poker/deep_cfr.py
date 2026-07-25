@@ -350,7 +350,8 @@ class DeepCFRTrainer:
         if total <= 0.0:
             positive[legal_mask] = 1.0 / legal_mask.sum()
             return positive
-        return cast(NDArray[np.float64], positive / total)
+        normalized: NDArray[np.float64] = positive / total
+        return normalized
 
     def _fit_advantage(self, player: int) -> float:
         return self._fit_network(
