@@ -20,6 +20,7 @@ PROJECTS = (
     "10_risk_parity",
     "11_probability_games",
     "12_kelly_and_stopping",
+    "13_poker_cfr_lab",
 )
 
 

@@ -7,8 +7,13 @@ __pycache__/
 .coverage
 htmlcov/
 .venv/
+node_modules/
+.wrangler/
+*.log
 dist/
 build/
+!projects/14_poker_bot_arena/build/
+!projects/14_poker_bot_arena/build/sites-vite-plugin.ts
 projects/**/results/*.png
 projects/**/results/*.csv
 projects/**/results/*.json
