@@ -27,6 +27,7 @@ dev = [
 ]
 poker = [
   "rlcard==1.2.0",
+  "setuptools>=68,<81",
 ]
 
 [tool.hatch.build.targets.wheel]
