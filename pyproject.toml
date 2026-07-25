@@ -25,6 +25,9 @@ dev = [
   "pytest-cov>=5",
   "ruff>=0.5",
 ]
+poker = [
+  "rlcard==1.2.0",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/quantlab"]
@@ -46,5 +49,5 @@ strict = true
 packages = ["quantlab"]
 
 [[tool.mypy.overrides]]
-module = ["scipy.*"]
+module = ["rlcard.*", "scipy.*"]
 ignore_missing_imports = true

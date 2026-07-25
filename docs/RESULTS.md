@@ -1,8 +1,9 @@
 # Verified seeded results
 
-These numbers were regenerated from a clean local invocation of all 12 project
-scripts. Except for analytic identities, they come from synthetic data or
-simulation and must not be interpreted as claims of live trading performance.
+These numbers were regenerated from clean, seeded project invocations. Except
+for analytic identities and exactly enumerated game trees, they come from
+synthetic data or simulation and must not be interpreted as claims of live
+trading performance.
 
 ## Derivatives and simulation
 
@@ -44,6 +45,19 @@ strategy promotion.
 | Kelly fraction | 0.10 | Binary even-money analytic optimum |
 | Secretary sample fraction | 0.375 best grid point | 1/e = 0.36788 |
 
+## Imperfect-information game solving
+
+| Experiment | Result | Benchmark |
+|---|---:|---|
+| CFR+ exploitability | 0.04236 BB/hand | Exact full-history best response |
+| CFR+ vs RLCard CFR | +0.13596 BB/hand | Exact enumeration, either seat |
+| Duplicate face-off | +0.10673 BB/hand | 10,000 pairs; 95% CI [0.06749, 0.14596] |
+| CFR+ vs uniform random | +0.73821 BB/hand | Exact enumeration |
+
+The poker figures are for six-card heads-up Leduc Hold'em. They demonstrate a
+reproducible game-solving pipeline and are not claims about no-limit Texas
+Hold'em or real-money performance.
+
 ## Verification command
 
 ```bash
@@ -51,7 +65,9 @@ python -m ruff check .
 python -m mypy
 python -m pytest
 python scripts/run_all.py
+cd projects/14_poker_bot_arena && npm test && npm run lint
 ```
 
-At the recorded verification point: 35 tests passed, strict type checking and
-linting passed, and statement coverage was 85%.
+Python and browser test counts and coverage are regenerated in CI rather than
+frozen here. Both stacks enforce linting, typed builds, engine invariants,
+policy artifact counts, and deterministic seeded behavior.

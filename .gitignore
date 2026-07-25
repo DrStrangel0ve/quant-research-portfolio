@@ -7,6 +7,9 @@ __pycache__/
 .coverage
 htmlcov/
 .venv/
+node_modules/
+.wrangler/
+*.log
 dist/
 build/
 projects/**/results/*.png

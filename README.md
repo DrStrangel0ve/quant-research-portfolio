@@ -25,6 +25,8 @@ execution frictions, and experiments that can be challenged in an interview.
 | 10 | [Risk parity portfolio](projects/10_risk_parity/README.md) | Portfolio risk | Shrunk covariance and equal risk contribution |
 | 11 | [Ruin and information games](projects/11_probability_games/README.md) | Probability | Gambler's ruin and Monty Hall: exact vs. simulation |
 | 12 | [Kelly and optimal stopping](projects/12_kelly_and_stopping/README.md) | Probability | Log-optimal sizing and the secretary problem |
+| 13 | [Poker CFR+ lab](projects/13_poker_cfr_lab/README.md) | Game theory | From-scratch CFR+, exact best response, and RLCard face-off |
+| 14 | [Playable poker bot arena](projects/14_poker_bot_arena/README.md) | Interactive research | Human play against trained, reference, exact, and heuristic bots |
 
 ## Research safeguards
 
@@ -55,6 +57,7 @@ python -m venv .venv
 python -m pip install -e ".[dev]"
 python -m pytest
 python projects/01_option_pricing/run.py
+python projects/13_poker_cfr_lab/run.py
 python scripts/run_all.py
 ```
 
@@ -67,6 +70,7 @@ that the documented experiment is reproducible.
 ```text
 src/quantlab/        reusable, tested research components
 projects/            independent experiments and project notes
+projects/14_*/       deployable TypeScript poker arena
 tests/               unit, invariant, and anti-look-ahead tests
 .github/workflows/   Python 3.11/3.12 quality gates
 ```
@@ -77,4 +81,6 @@ Start with a failed assumption, not the prettiest chart. Useful discussion
 prompts include the Heston discretization bias, fill-model optimism in the
 market maker, instability of a rolling pairs hedge ratio, turnover drag in
 momentum, covariance estimation error in risk parity, and over-betting under
-parameter uncertainty in Kelly sizing.
+parameter uncertainty in Kelly sizing. For game-theory roles, discuss why the
+poker bot reports exact exploitability rather than only a head-to-head win rate,
+and why Leduc results do not imply frontier no-limit Hold'em performance.

@@ -1,0 +1,60 @@
+{
+  "convergence": [
+    {
+      "exact_exploitability_bb_per_hand": 0.6279587733042284,
+      "exact_value_vs_random_bb_per_hand": 0.43703071880453676,
+      "information_sets": 288,
+      "iterations": 100
+    },
+    {
+      "exact_exploitability_bb_per_hand": 0.26454890265386904,
+      "exact_value_vs_random_bb_per_hand": 0.615600820132852,
+      "information_sets": 288,
+      "iterations": 500
+    },
+    {
+      "exact_exploitability_bb_per_hand": 0.19165732553165238,
+      "exact_value_vs_random_bb_per_hand": 0.6985840962508579,
+      "information_sets": 288,
+      "iterations": 1000
+    },
+    {
+      "exact_exploitability_bb_per_hand": 0.04236126814884865,
+      "exact_value_vs_random_bb_per_hand": 0.7382060779969049,
+      "information_sets": 288,
+      "iterations": 20000
+    }
+  ],
+  "exact": {
+    "exploitability_bb_per_hand": 0.04236126814884865,
+    "matchups_as_player_zero_bb_per_hand": {
+      "always_aggressive": 0.4166722194525543,
+      "calling_station": 0.30809813058525193,
+      "uniform_random": 0.7382060779969049
+    },
+    "self_play_value_bb_per_hand": 2.688821387764051e-16
+  },
+  "experiment": {
+    "algorithm": "chance-sampled CFR+ with linear averaging",
+    "game": "heads-up limit Leduc Hold'em (RLCard rules)",
+    "information_mode": "perfect_recall public history",
+    "information_sets": 288,
+    "iterations": 20000,
+    "seed": 13001
+  },
+  "rlcard_reference": {
+    "checkpoint": "RLCard 1.2.0 bundled leduc-holdem-cfr",
+    "our_exact_value_as_player_one_bb_per_hand": 0.1359635119901028,
+    "our_exact_value_as_player_zero_bb_per_hand": 0.13596351199010268,
+    "paired_duplicate_match": {
+      "ci95_high": 0.14596499711596914,
+      "ci95_low": 0.06748500288403086,
+      "duplicate_pairs": 10000,
+      "mean_big_blinds": 0.106725,
+      "standard_error": 0.020020406691820987
+    },
+    "reference_exact_exploitability_bb_per_hand": 0.458136753370177,
+    "reference_information_sets": 84,
+    "status": "evaluated"
+  }
+}

@@ -17,6 +17,8 @@ Start with:
 3. **GARCH forecasting** — likelihood recursion, constrained parameters, and
    why Gaussian innovations understate tail risk.
 4. **Risk parity** — covariance estimation error, shrinkage, and component risk.
+5. **Poker CFR+ lab** — counterfactual regret, exact exploitability, imperfect
+   information, and why a head-to-head win is not an equilibrium certificate.
 
 Strong discussion prompt: *What additional evidence would change this from a
 mechanism demonstration into a defensible empirical claim?*
@@ -47,6 +49,8 @@ Start with:
    intervals, and analytic regression tests.
 4. **CI and tests** — multi-version checks, strict typing, temporal-invariance
    tests, and reproducible commands.
+5. **Poker engine and arena** — immutable transitions, Python/RLCard parity,
+   checkpoint serialization, and a deployable policy debugger.
 
 Strong discussion prompt: *Which abstractions would need to change for
 event-driven, multi-venue, asynchronous production use?*
@@ -56,11 +60,11 @@ event-driven, multi-venue, asynchronous production use?*
 Use only claims that remain true after publication and CI verification. A
 concise draft:
 
-> Built a typed Python quantitative-research portfolio spanning derivatives,
-> market microstructure, systematic strategies, portfolio risk, and probability;
-> implemented lagged cost-aware backtests, seeded Monte Carlo engines, and
-> chronological walk-forward evaluation with 35 automated tests and 85% coverage.
+> Built a typed quantitative-research portfolio spanning derivatives, market
+> microstructure, systematic strategies, portfolio risk, probability, and
+> imperfect-information games; added a from-scratch CFR+ poker solver with
+> exact best-response auditing and an interactive trained-policy arena.
 
-Avoid quoting synthetic Sharpe ratios as investment achievements. The stronger
-signal is that the framework exposes leakage, costs, uncertainty, and failed
-hypotheses.
+Avoid quoting synthetic Sharpe ratios or small-game poker win rates as real-world
+performance achievements. The stronger signal is that the framework exposes
+leakage, costs, uncertainty, failed hypotheses, and exploitability.
