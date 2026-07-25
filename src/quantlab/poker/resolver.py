@@ -14,7 +14,7 @@ from itertools import combinations
 import numpy as np
 from numpy.typing import NDArray
 
-from quantlab.poker.deep_cfr import MicroPolicy
+from quantlab.poker.deep_cfr import MicroPolicy, policy_probabilities_batch
 from quantlab.poker.micro_evaluation import play_micro_hand
 from quantlab.poker.micro_holdem import (
     ACTION_COUNT,
@@ -57,10 +57,18 @@ class BeliefRolloutResolver:
         observer = state.current_player
         posterior = infer_opponent_range(state, observer=observer, blueprint=self.blueprint)
         self.last_range = posterior
-        samples = [
-            _sample_counterfactual_state(state, observer, posterior, self.rng)
-            for _ in range(self.rollouts_per_action)
-        ]
+        samples = sample_counterfactual_states(
+            state,
+            observer,
+            posterior,
+            self.rng,
+            count=self.rollouts_per_action,
+        )
+        rollout_seeds = self.rng.integers(
+            0,
+            np.iinfo(np.int64).max,
+            size=self.rollouts_per_action,
+        )
         action_values = np.full(ACTION_COUNT, -np.inf, dtype=np.float64)
         for action in state.legal_actions():
             values = np.empty(self.rollouts_per_action, dtype=np.float64)
@@ -72,7 +80,7 @@ class BeliefRolloutResolver:
                     else play_micro_hand(
                         child,
                         (self.blueprint, self.blueprint),
-                        self.rng,
+                        np.random.default_rng(int(rollout_seeds[index])),
                     )[observer]
                 )
             action_values[int(action)] = values.mean()
@@ -94,24 +102,22 @@ def infer_opponent_range(
         raise ValueError("observer must be player zero or one")
     known = set(state.deal.hole_cards[observer]) | set(state.visible_board)
     combos = tuple(combinations((card for card in range(DECK_SIZE) if card not in known), 2))
-    weights = np.empty(len(combos), dtype=np.float64)
-    for index, combo in enumerate(combos):
-        replay = _state_for_combo(
+    replays = [
+        _state_for_combo(
             state,
             observer,
             combo,
             np.random.default_rng(index),
             replay_history=False,
         )
-        likelihood = 1.0
-        for _, observed_action in state.history:
-            if replay.current_player != observer:
-                likelihood *= max(
-                    blueprint.probabilities(replay)[int(observed_action)],
-                    1e-9,
-                )
-            replay = replay.apply(observed_action)
-        weights[index] = likelihood
+        for index, combo in enumerate(combos)
+    ]
+    weights = np.ones(len(combos), dtype=np.float64)
+    for _, observed_action in state.history:
+        if replays[0].current_player != observer:
+            probabilities = policy_probabilities_batch(blueprint, replays)
+            weights *= np.maximum(probabilities[:, int(observed_action)], 1e-9)
+        replays = [replay.apply(observed_action) for replay in replays]
     total = weights.sum()
     probabilities = (
         weights / total
@@ -122,14 +128,21 @@ def infer_opponent_range(
     return RangeEstimate(combos, probabilities, effective_sample_size)
 
 
-def _sample_counterfactual_state(
+def sample_counterfactual_states(
     state: MicroHoldemState,
     observer: int,
     posterior: RangeEstimate,
     rng: np.random.Generator,
-) -> MicroHoldemState:
-    index = int(rng.choice(len(posterior.combos), p=posterior.probabilities))
-    return _state_for_combo(state, observer, posterior.combos[index], rng)
+    *,
+    count: int,
+) -> list[MicroHoldemState]:
+    """Systematically sample the posterior so low-variance mass is represented."""
+    positions = (float(rng.random()) + np.arange(count)) / count
+    indices = np.searchsorted(np.cumsum(posterior.probabilities), positions, side="right")
+    return [
+        _state_for_combo(state, observer, posterior.combos[int(index)], rng)
+        for index in indices
+    ]
 
 
 def _state_for_combo(

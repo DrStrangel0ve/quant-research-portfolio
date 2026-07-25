@@ -28,7 +28,7 @@ ephemeral.
 | Bot | Decision source |
 |---|---|
 | Deep CFR | Browser MLP inference from the learned average-strategy checkpoint |
-| Range Resolver | Bayesian action-likelihood range filter plus local blueprint rollouts |
+| Range Resolver | Bayesian range filter plus stratified common-random-number rollouts |
 | Pot Pressure | Pot-first deterministic heuristic |
 | Calling Station | Check/call deterministic heuristic |
 | Chaos | Uniform legal random baseline |

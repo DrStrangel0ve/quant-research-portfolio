@@ -1,0 +1,87 @@
+{
+  "belief_rollout_resolver_vs_candidate": {
+    "common_random_numbers": true,
+    "match": {
+      "ci95_high": 0.8885498124631375,
+      "ci95_low": -1.0185498124631376,
+      "duplicate_pairs": 100,
+      "mean_big_blinds": -0.065,
+      "standard_error": 0.48650500635874366
+    },
+    "rollouts_per_action": 64,
+    "stratified_range_sampling": true
+  },
+  "direct_candidate_vs_v1": {
+    "ci95_high": 0.06793608395857693,
+    "ci95_low": -0.22203608395857694,
+    "duplicate_pairs": 5000,
+    "mean_big_blinds": -0.07705,
+    "standard_error": 0.07397249181560048
+  },
+  "equal_weight_opponent_suite": {
+    "ci95_high": 0.024743396450552506,
+    "ci95_low": -0.0898545075616636,
+    "mean_improvement_big_blinds": -0.03255555555555555,
+    "standard_error": 0.029234159186789826
+  },
+  "experiment": {
+    "additional_iterations": 2400,
+    "algorithm": "resumed external-sampling neural CFR",
+    "completed_iteration": 4000,
+    "config": {
+      "advantage_steps": 60,
+      "batch_size": 128,
+      "hidden_size": 128,
+      "iterations": 2400,
+      "learning_rate": 0.0005,
+      "memory_capacity": 100000,
+      "seed": 15002,
+      "strategy_steps": 600,
+      "train_every": 20,
+      "traversals_per_player": 8
+    },
+    "device": "cpu",
+    "seed": 15002,
+    "source_checkpoint": "C:\\Users\\arnav\\Documents\\Codex\\2026-07-25\\i\\work\\quant-portfolio\\projects\\15_neural_poker_solver\\artifacts\\deep_cfr_checkpoint.pt",
+    "starting_iteration": 1600,
+    "training_seconds": 265.9831887
+  },
+  "paired_improvement_vs_v1": {
+    "calling_station": {
+      "baseline_mean_big_blinds": 0.46166666666666667,
+      "candidate_mean_big_blinds": 0.39608333333333334,
+      "ci95_high": 0.024138139980650702,
+      "ci95_low": -0.15530480664731736,
+      "duplicate_pairs": 3000,
+      "mean_improvement_big_blinds": -0.06558333333333333,
+      "standard_error": 0.045776261894889814
+    },
+    "pot_pressure": {
+      "baseline_mean_big_blinds": 0.23125,
+      "candidate_mean_big_blinds": 0.22625,
+      "ci95_high": 0.10654940564097673,
+      "ci95_low": -0.11654940564097674,
+      "duplicate_pairs": 3000,
+      "mean_improvement_big_blinds": -0.005,
+      "standard_error": 0.056912962061722826
+    },
+    "uniform_random": {
+      "baseline_mean_big_blinds": 0.5705833333333333,
+      "candidate_mean_big_blinds": 0.5435,
+      "ci95_high": 0.06807609308621455,
+      "ci95_low": -0.12224275975288122,
+      "duplicate_pairs": 3000,
+      "mean_improvement_big_blinds": -0.027083333333333334,
+      "standard_error": 0.048550727765075456
+    }
+  },
+  "promotion_gate": {
+    "browser_exported": false,
+    "passed": false,
+    "requirements": {
+      "direct_v1_ci95_low_at_least_minus_0_10": false,
+      "no_fixed_opponent_significant_regression": true,
+      "opponent_suite_ci95_low_above_zero": false
+    }
+  }
+}

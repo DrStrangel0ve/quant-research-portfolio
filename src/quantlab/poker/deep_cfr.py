@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import json
 from collections.abc import Sequence
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import Any, Protocol, cast
 
@@ -141,13 +141,29 @@ class NeuralPolicy:
         self.device = torch.device(device)
 
     def probabilities(self, state: MicroHoldemState) -> NDArray[np.float64]:
-        features = encode_information_state(state)
-        legal_mask = features[LEGAL_MASK_SLICE].astype(bool)
-        tensor = torch.from_numpy(features).to(self.device).unsqueeze(0)
+        return cast(NDArray[np.float64], self.probabilities_batch([state])[0])
+
+    def probabilities_batch(
+        self,
+        states: Sequence[MicroHoldemState],
+    ) -> NDArray[np.float64]:
+        """Evaluate several information states in one network call."""
+        if not states:
+            return np.empty((0, ACTION_COUNT), dtype=np.float64)
+        features = np.stack(
+            [encode_information_state(state) for state in states],
+        )
+        legal_masks = features[:, LEGAL_MASK_SLICE].astype(bool)
+        tensor = torch.from_numpy(features).to(self.device)
         with torch.no_grad():
-            logits = self.network(tensor).squeeze(0).cpu().numpy().astype(np.float64)
-        logits[~legal_mask] = -np.inf
-        return _softmax(logits, legal_mask)
+            logits = self.network(tensor).cpu().numpy().astype(np.float64)
+        logits[~legal_masks] = -np.inf
+        return np.stack(
+            [
+                _softmax(row, mask)
+                for row, mask in zip(logits, legal_masks, strict=True)
+            ]
+        )
 
     @classmethod
     def from_checkpoint(cls, path: Path, *, device: str = "cpu") -> NeuralPolicy:
@@ -156,6 +172,57 @@ class NeuralPolicy:
         network = PokerNetwork(hidden_size=hidden_size)
         network.load_state_dict(payload["strategy_network"])
         return cls(network, device=device)
+
+
+def policy_probabilities_batch(
+    policy: MicroPolicy,
+    states: Sequence[MicroHoldemState],
+) -> NDArray[np.float64]:
+    """Use a policy's optional batched path, with a scalar fallback."""
+    batch_method = getattr(policy, "probabilities_batch", None)
+    if callable(batch_method):
+        return cast(NDArray[np.float64], batch_method(states))
+    return np.stack([policy.probabilities(state) for state in states])
+
+
+class MixturePolicy:
+    """Behavioral mixture of independently trained policies."""
+
+    def __init__(
+        self,
+        policies: Sequence[MicroPolicy],
+        weights: Sequence[float],
+    ) -> None:
+        if not policies or len(policies) != len(weights):
+            raise ValueError("policies and weights must have the same non-zero length")
+        normalized = np.asarray(weights, dtype=np.float64)
+        if np.any(normalized < 0.0) or normalized.sum() <= 0.0:
+            raise ValueError("mixture weights must be non-negative with positive mass")
+        self.policies = tuple(policies)
+        self.weights = normalized / normalized.sum()
+
+    def probabilities(self, state: MicroHoldemState) -> NDArray[np.float64]:
+        probabilities = sum(
+            (
+                weight * policy.probabilities(state)
+                for weight, policy in zip(self.weights, self.policies, strict=True)
+            ),
+            start=np.zeros(ACTION_COUNT, dtype=np.float64),
+        )
+        return np.asarray(probabilities, dtype=np.float64)
+
+    def probabilities_batch(
+        self,
+        states: Sequence[MicroHoldemState],
+    ) -> NDArray[np.float64]:
+        probabilities = sum(
+            (
+                weight * policy_probabilities_batch(policy, states)
+                for weight, policy in zip(self.weights, self.policies, strict=True)
+            ),
+            start=np.zeros((len(states), ACTION_COUNT), dtype=np.float64),
+        )
+        return np.asarray(probabilities, dtype=np.float64)
 
 
 class RandomMicroPolicy:
@@ -221,20 +288,32 @@ class DeepCFRTrainer:
         self.snapshots: list[TrainingSnapshot] = []
         self.iteration = 0
 
-    def train(self) -> NeuralPolicy:
-        """Run the configured external-sampling traversals and network updates."""
+    def train(self, iterations: int | None = None) -> NeuralPolicy:
+        """Run additional external-sampling iterations and network updates.
+
+        ``iterations`` is an additional budget, so a trainer restored from a
+        checkpoint can continue from its absolute iteration counter without
+        replaying the earlier schedule.
+        """
+        additional_iterations = self.config.iterations if iterations is None else iterations
+        if additional_iterations <= 0:
+            raise ValueError("iterations must be positive")
         losses = [float("nan"), float("nan")]
-        for iteration in range(1, self.config.iterations + 1):
-            self.iteration = iteration
+        final_iteration = self.iteration + additional_iterations
+        for _ in range(additional_iterations):
+            self.iteration += 1
             for traverser in (0, 1):
                 for _ in range(self.config.traversals_per_player):
                     self._traverse(sample_micro_state(self.rng), traverser=traverser)
-            if iteration % self.config.train_every == 0 or iteration == self.config.iterations:
+            if (
+                self.iteration % self.config.train_every == 0
+                or self.iteration == final_iteration
+            ):
                 for player in (0, 1):
                     losses[player] = self._fit_advantage(player)
                 self.snapshots.append(
                     TrainingSnapshot(
-                        iteration=iteration,
+                        iteration=self.iteration,
                         advantage_loss_player_zero=losses[0],
                         advantage_loss_player_one=losses[1],
                         advantage_samples_player_zero=len(self.advantage_memories[0]),
@@ -244,6 +323,64 @@ class DeepCFRTrainer:
                 )
         self._fit_strategy()
         return NeuralPolicy(self.strategy_network, device=str(self.device))
+
+    @classmethod
+    def from_checkpoint(
+        cls,
+        path: Path,
+        *,
+        device: str | None = None,
+        iterations: int | None = None,
+        traversals_per_player: int | None = None,
+        train_every: int | None = None,
+        advantage_steps: int | None = None,
+        strategy_steps: int | None = None,
+        learning_rate: float | None = None,
+        seed: int | None = None,
+    ) -> DeepCFRTrainer:
+        """Restore all networks and continue with optional compute overrides.
+
+        Replay reservoirs are deliberately not serialized; continuation starts
+        fresh reservoirs while retaining the learned function approximators and
+        absolute iteration counter.
+        """
+        payload = torch.load(path, map_location=device or "cpu", weights_only=True)
+        if payload.get("format") != "quantlab-royal-micro-deep-cfr-v1":
+            raise ValueError("unsupported Deep CFR checkpoint format")
+        config = TrainingConfig(**payload["config"])
+        config = replace(
+            config,
+            iterations=config.iterations if iterations is None else iterations,
+            traversals_per_player=(
+                config.traversals_per_player
+                if traversals_per_player is None
+                else traversals_per_player
+            ),
+            train_every=config.train_every if train_every is None else train_every,
+            advantage_steps=(
+                config.advantage_steps if advantage_steps is None else advantage_steps
+            ),
+            strategy_steps=(
+                config.strategy_steps if strategy_steps is None else strategy_steps
+            ),
+            learning_rate=(
+                config.learning_rate if learning_rate is None else learning_rate
+            ),
+            seed=config.seed if seed is None else seed,
+        )
+        trainer = cls(config, device=device)
+        trainer.iteration = int(payload["iterations"])
+        for network, state_dict in zip(
+            trainer.advantage_networks,
+            payload["advantage_networks"],
+            strict=True,
+        ):
+            network.load_state_dict(state_dict)
+        trainer.strategy_network.load_state_dict(payload["strategy_network"])
+        trainer.snapshots = [
+            TrainingSnapshot(**snapshot) for snapshot in payload.get("snapshots", [])
+        ]
+        return trainer
 
     def save_checkpoint(self, path: Path) -> None:
         """Save network weights and training metadata without replay buffers."""
@@ -262,6 +399,43 @@ class DeepCFRTrainer:
             },
             path,
         )
+
+    def seed_strategy_memory(
+        self,
+        policy: MicroPolicy,
+        *,
+        samples: int,
+    ) -> None:
+        """Reconstruct average-policy replay before checkpoint continuation.
+
+        Deep CFR checkpoints intentionally omit large replay reservoirs.  This
+        method samples states from the saved behavioral policy and stores its
+        action distribution, preventing the continued average-strategy fit from
+        forgetting the policy represented by the source checkpoint.
+        """
+        if samples < 0:
+            raise ValueError("samples cannot be negative")
+        collected = 0
+        while collected < samples:
+            state = sample_micro_state(self.rng)
+            while not state.is_terminal and collected < samples:
+                probabilities = policy.probabilities(state)
+                self.strategy_memory.add(
+                    ReplaySample(
+                        encode_information_state(state),
+                        probabilities.astype(np.float32),
+                        float(max(self.iteration, 1)),
+                    )
+                )
+                legal = state.legal_actions()
+                local = np.asarray(
+                    [probabilities[int(action)] for action in legal],
+                    dtype=np.float64,
+                )
+                local /= local.sum()
+                chosen = legal[int(self.rng.choice(len(legal), p=local))]
+                state = state.apply(chosen)
+                collected += 1
 
     def export_strategy_json(self, path: Path) -> None:
         """Export the strategy MLP in a dependency-free browser format."""

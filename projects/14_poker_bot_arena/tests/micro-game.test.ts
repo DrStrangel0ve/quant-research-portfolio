@@ -5,6 +5,7 @@ import test from "node:test";
 import {
   applyMicroAction,
   blueprintProbabilities,
+  chooseMicroBotAction,
   createMicroGame,
   encodeMicroState,
   isMicroTerminal,
@@ -125,4 +126,14 @@ test("browser MLP matches Python checkpoint inference", async () => {
   probabilities.forEach((probability, action) => {
     assert.ok(Math.abs(probability - pythonReference[action]) < 1e-5);
   });
+});
+
+test("stratified range resolver returns a legal searched action", async () => {
+  const modelUrl = new URL("../public/micro-strategy.json", import.meta.url);
+  const model = JSON.parse(await readFile(modelUrl, "utf8")) as BrowserStrategy;
+  const game = createMicroGame(0, () => 0.37);
+  const decision = chooseMicroBotAction(game, "resolver", model, () => 0.41);
+  assert.ok(legalMicroActions(game).includes(decision.action));
+  assert.equal(decision.rangeSize, 231);
+  assert.equal(decision.actionValues?.length, 5);
 });

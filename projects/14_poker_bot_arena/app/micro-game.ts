@@ -323,7 +323,7 @@ export function chooseMicroBotAction(
     );
     probabilities[choice ?? legal[0]] = 1;
   } else if (bot === "resolver" && model) {
-    const result = resolveAction(game, model, 14, random);
+    const result = resolveAction(game, model, 24, random);
     probabilities[result.action] = 1;
     actionValues = result.values;
     rangeSize = result.rangeSize;
@@ -363,17 +363,28 @@ function resolveAction(
 ): { action: MicroAction; values: number[]; rangeSize: number } {
   const observer = game.currentPlayer;
   const range = inferRange(game, observer, model, random);
-  const sampledStates = Array.from({ length: rolloutsPerAction }, () => {
-    const combo = weightedChoice(range.combos, range.weights, random);
-    return counterfactualGame(game, observer, combo, random);
-  });
+  const sampledStates = stratifiedRangeSample(
+    range.combos,
+    range.weights,
+    rolloutsPerAction,
+    random,
+  ).map((combo) => counterfactualGame(game, observer, combo, random));
+  const rolloutSeeds = Array.from(
+    { length: rolloutsPerAction },
+    () => Math.floor(random() * 0xffff_ffff),
+  );
   const values = Array.from({ length: ACTION_COUNT }, () => Number.NEGATIVE_INFINITY);
   for (const action of legalMicroActions(game)) {
     let total = 0;
-    for (const sampled of sampledStates) {
+    sampledStates.forEach((sampled, index) => {
       const child = applyMicroAction(sampled, action);
-      total += rolloutValue(child, observer, model, random);
-    }
+      total += rolloutValue(
+        child,
+        observer,
+        model,
+        seededRandom(rolloutSeeds[index]),
+      );
+    });
     values[action] = total / sampledStates.length;
   }
   const action = legalMicroActions(game).reduce((best, candidate) =>
@@ -598,18 +609,36 @@ function sampleAction(
   return legal[legal.length - 1];
 }
 
-function weightedChoice<T>(
+function stratifiedRangeSample<T>(
   items: T[],
   weights: number[],
+  count: number,
   random: () => number,
-): T {
-  const draw = random();
-  let cumulative = 0;
-  for (let index = 0; index < items.length; index += 1) {
-    cumulative += weights[index];
-    if (draw <= cumulative) return items[index];
+): T[] {
+  const offset = random();
+  const positions = Array.from({ length: count }, (_, index) => (offset + index) / count);
+  const samples: T[] = [];
+  let cumulative = weights[0];
+  let itemIndex = 0;
+  for (const position of positions) {
+    while (position > cumulative && itemIndex < items.length - 1) {
+      itemIndex += 1;
+      cumulative += weights[itemIndex];
+    }
+    samples.push(items[itemIndex]);
   }
-  return items[items.length - 1];
+  return samples;
+}
+
+function seededRandom(seed: number): () => number {
+  let state = seed >>> 0;
+  return () => {
+    state += 0x6d2b79f5;
+    let value = state;
+    value = Math.imul(value ^ (value >>> 15), value | 1);
+    value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+    return ((value ^ (value >>> 14)) >>> 0) / 0x1_0000_0000;
+  };
 }
 
 function shuffle(values: number[], random: () => number): void {

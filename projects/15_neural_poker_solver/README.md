@@ -30,6 +30,11 @@ all-ins. It is still far smaller than full heads-up no-limit Texas Hold'em.
 - Seat-swapped duplicate-poker evaluation with paired 95% confidence intervals.
 - A Bayesian public-range filter and lightweight rollout resolver that searches
   each legal root action against the learned blueprint.
+- Checkpoint continuation with replay anchoring and paired promotion gates.
+- Public-history pressure adaptation, static checkpoint mixtures, and
+  candidate-minus-incumbent duplicate evaluation.
+- An information-set value network with exact/seeded showdown-equity features,
+  batched range inference, and conservative flop-only value search.
 - Tests for rules, accounting, evaluator order, suit invariance, hidden-card
   isolation, neural masks, replay, duplicate evaluation, and belief support.
 
@@ -57,6 +62,41 @@ The run writes:
 - `micro_strategy.json`: small MLP weights in a browser-readable format.
 - `training_diagnostics.csv` and `.png`: loss and replay growth by checkpoint.
 - `summary.json`: duplicate cross-play, confidence intervals, and resolver audit.
+
+Continue from that checkpoint without discarding the learned networks:
+
+```bash
+python projects/15_neural_poker_solver/continue_training.py \
+  --additional-iterations 2400 --traversals 8 --anchor-samples 100000 \
+  --promote-browser projects/14_poker_bot_arena/public/micro-strategy.json
+```
+
+Continuation retains both advantage networks, the average-strategy network, and
+the absolute CFR iteration counter. Because checkpoints omit large historical
+reservoirs, it first reconstructs average-policy replay by sampling the saved
+blueprint. This anchor prevents end-of-run strategy fitting from catastrophically
+forgetting the source policy. Advantage replay starts fresh. Promotion is
+automatic only when a predeclared paired gate passes:
+the equal-weight fixed-opponent improvement interval must exclude zero, no
+individual opponent may show a significant regression, and direct v2-vs-v1
+cross-play may not have a lower confidence bound below `-0.10 BB/hand`.
+
+Train the information-set value model and evaluate conservative flop search:
+
+```bash
+python projects/15_neural_poker_solver/train_value_model.py \
+  --examples 30000 --rollout-repeats 2 --epochs 25 \
+  --output projects/15_neural_poker_solver/artifacts/value_v3_equity
+python projects/15_neural_poker_solver/evaluate_value_search.py \
+  --value-checkpoint \
+    projects/15_neural_poker_solver/artifacts/value_v3_equity/state_value_checkpoint.pt \
+  --weights 0.05 0.10 0.15 --belief-samples 32 --search-streets 1
+```
+
+See [CONTINUATION_STUDY.md](CONTINUATION_STUDY.md) for the full continuation,
+mixture, adaptation, value-model, and search ablations. No candidate cleared
+every predeclared gate, so the committed v1 browser checkpoint remains the
+production champion.
 
 ## Verified seeded result
 

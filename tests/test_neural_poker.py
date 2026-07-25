@@ -1,14 +1,19 @@
+from dataclasses import replace
 from itertools import permutations
 from pathlib import Path
 
 import numpy as np
 import pytest
+import torch
 
+from quantlab.poker.adaptive import PressureAdaptivePolicy
 from quantlab.poker.deep_cfr import (
     CallingStationMicroPolicy,
     DeepCFRTrainer,
+    MixturePolicy,
     NeuralPolicy,
     PokerNetwork,
+    PressureMicroPolicy,
     RandomMicroPolicy,
     ReplaySample,
     ReservoirBuffer,
@@ -16,7 +21,7 @@ from quantlab.poker.deep_cfr import (
     load_browser_strategy,
 )
 from quantlab.poker.features import FEATURE_DIM, canonical_cards, encode_information_state
-from quantlab.poker.micro_evaluation import duplicate_micro_match
+from quantlab.poker.micro_evaluation import duplicate_micro_match, paired_policy_improvement
 from quantlab.poker.micro_holdem import (
     MicroAction,
     MicroDeal,
@@ -27,6 +32,14 @@ from quantlab.poker.micro_holdem import (
     sample_micro_state,
 )
 from quantlab.poker.resolver import BeliefRolloutResolver, infer_opponent_range
+from quantlab.poker.value_search import (
+    NeuralStateValue,
+    StateValueNetwork,
+    ValueGuidedResolver,
+    ValueTrainingConfig,
+    save_state_value_checkpoint,
+    train_state_value,
+)
 
 
 def test_micro_deal_rejects_duplicate_cards() -> None:
@@ -146,10 +159,25 @@ def test_neural_policy_masks_illegal_actions() -> None:
     state = sample_micro_state(np.random.default_rng(5), button=0)
     policy = NeuralPolicy(PokerNetwork(hidden_size=16))
     probabilities = policy.probabilities(state)
+    batched = policy.probabilities_batch(
+        [state, sample_micro_state(np.random.default_rng(50), button=1)]
+    )
+    assert batched.shape == (2, len(MicroAction))
+    assert batched[0] == pytest.approx(probabilities)
     assert probabilities.sum() == pytest.approx(1.0)
     for action in MicroAction:
         if action not in state.legal_actions():
             assert probabilities[int(action)] == 0.0
+    mixture = MixturePolicy(
+        (policy, CallingStationMicroPolicy()),
+        (0.25, 0.75),
+    )
+    mixed = mixture.probabilities(state)
+    assert mixed.sum() == pytest.approx(1.0)
+    assert mixed == pytest.approx(
+        0.25 * probabilities
+        + 0.75 * CallingStationMicroPolicy().probabilities(state)
+    )
 
 
 def test_tiny_deep_cfr_run_collects_both_memories(tmp_path: Path) -> None:
@@ -179,6 +207,20 @@ def test_tiny_deep_cfr_run_collects_both_memories(tmp_path: Path) -> None:
     restored = NeuralPolicy.from_checkpoint(checkpoint)
     assert restored.probabilities(state) == pytest.approx(policy.probabilities(state))
     assert load_browser_strategy(export)["network"]["input_size"] == FEATURE_DIM
+    continued = DeepCFRTrainer.from_checkpoint(
+        checkpoint,
+        iterations=1,
+        traversals_per_player=1,
+        train_every=1,
+        advantage_steps=1,
+        strategy_steps=1,
+        seed=66,
+    )
+    assert continued.iteration == 3
+    continued.seed_strategy_memory(restored, samples=10)
+    assert len(continued.strategy_memory) == 10
+    continued.train()
+    assert continued.iteration == 4
 
 
 def test_duplicate_random_match_is_centered_near_zero() -> None:
@@ -190,6 +232,15 @@ def test_duplicate_random_match_is_centered_near_zero() -> None:
     )
     assert result.ci95_low <= result.mean_big_blinds <= result.ci95_high
     assert abs(result.mean_big_blinds) < 0.5
+    improvement = paired_policy_improvement(
+        RandomMicroPolicy(),
+        RandomMicroPolicy(),
+        CallingStationMicroPolicy(),
+        duplicate_pairs=20,
+        rng=np.random.default_rng(81),
+    )
+    assert improvement.mean_improvement_big_blinds == 0.0
+    assert improvement.standard_error == 0.0
 
 
 def test_range_inference_excludes_known_cards_and_normalizes() -> None:
@@ -223,3 +274,82 @@ def test_belief_rollout_resolver_returns_a_legal_action() -> None:
     probabilities = resolver.probabilities(state)
     selected = MicroAction(int(np.argmax(probabilities)))
     assert selected in state.legal_actions()
+
+
+def test_pressure_adaptation_uses_public_actions_not_hidden_cards() -> None:
+    first = initial_micro_state(
+        MicroDeal(((0, 5), (10, 15)), (1, 6, 11)),
+        button=0,
+    )
+    first = first.apply(MicroAction.CHECK_CALL)
+    first = first.apply(MicroAction.POT)
+    second = replace(
+        first,
+        deal=MicroDeal((first.deal.hole_cards[0], (12, 17)), first.deal.board),
+    )
+    adaptive = PressureAdaptivePolicy(
+        CallingStationMicroPolicy(),
+        PressureMicroPolicy(),
+        threshold=0.5,
+    )
+    assert adaptive.pressure_posterior(first) == pytest.approx(
+        adaptive.pressure_posterior(second)
+    )
+    assert adaptive.pressure_posterior(first) > 0.5
+    probabilities = adaptive.probabilities(first)
+    assert probabilities.sum() == pytest.approx(1.0)
+
+
+def test_value_training_reports_held_out_information_set_error(
+    tmp_path: Path,
+) -> None:
+    config = ValueTrainingConfig(
+        examples=64,
+        rollout_repeats=1,
+        maximum_prefix_actions=2,
+        epochs=1,
+        batch_size=16,
+        hidden_size=16,
+        validation_fraction=0.25,
+        seed=13,
+    )
+    result = train_state_value(
+        CallingStationMicroPolicy(),
+        config,
+        device="cpu",
+    )
+    assert result.metrics["validation_examples"] == 16
+    assert result.metrics["validation"]["mae_big_blinds"] >= 0.0
+    assert result.metrics["information_boundary"].startswith(
+        "features contain only acting-player cards"
+    )
+    checkpoint = tmp_path / "value.pt"
+    save_state_value_checkpoint(checkpoint, result, config)
+    restored = NeuralStateValue.from_checkpoint(checkpoint)
+    state = sample_micro_state(np.random.default_rng(130), button=0)
+    assert restored.value(state) == pytest.approx(result.value_function.value(state))
+
+
+def test_value_search_is_hidden_card_invariant() -> None:
+    torch.manual_seed(14)
+    value_function = NeuralStateValue(StateValueNetwork(hidden_size=16))
+    first = initial_micro_state(
+        MicroDeal(((0, 5), (10, 15)), (1, 6, 11)),
+        button=1,
+    )
+    second = initial_micro_state(
+        MicroDeal(((0, 5), (12, 17)), (1, 6, 11)),
+        button=1,
+    )
+    first = first.apply(MicroAction.CHECK_CALL).apply(MicroAction.CHECK_CALL)
+    second = second.apply(MicroAction.CHECK_CALL).apply(MicroAction.CHECK_CALL)
+    resolver = ValueGuidedResolver(
+        CallingStationMicroPolicy(),
+        value_function,
+        belief_samples=8,
+        improvement_weight=0.25,
+        seed=15,
+    )
+    assert resolver.probabilities(first) == pytest.approx(
+        resolver.probabilities(second)
+    )
