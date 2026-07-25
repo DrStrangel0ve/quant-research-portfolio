@@ -1,0 +1,77 @@
+{
+  "blueprint_checkpoint": "C:\\Users\\arnav\\Documents\\Codex\\2026-07-25\\i\\work\\quant-portfolio\\projects\\15_neural_poker_solver\\artifacts\\deep_cfr_checkpoint.pt",
+  "config": {
+    "batch_size": 512,
+    "blueprint_prefix_probability": 0.65,
+    "epochs": 30,
+    "examples": 60000,
+    "hidden_size": 128,
+    "learning_rate": 0.001,
+    "maximum_prefix_actions": 6,
+    "rollout_repeats": 2,
+    "seed": 15801,
+    "validation_fraction": 0.2
+  },
+  "device": "cpu",
+  "information_boundary": "features contain only acting-player cards and public state/history",
+  "target_normalization": {
+    "mean_big_blinds": -0.07854166626930237,
+    "scale_big_blinds": 6.377788066864014
+  },
+  "training_examples": 48000,
+  "training_loss_by_epoch": [
+    0.9693752742828207,
+    0.9523662899402862,
+    0.9481369174541311,
+    0.9386814718550824,
+    0.930271937492046,
+    0.9235783124223669,
+    0.9185410966264441,
+    0.9100916442718912,
+    0.9037659764289856,
+    0.8997586160264117,
+    0.8951564158530946,
+    0.8906196362160622,
+    0.8840381452377807,
+    0.8822797752441244,
+    0.8791458238946631,
+    0.872047226479713,
+    0.8687542125265649,
+    0.8631329992984204,
+    0.8590523156713932,
+    0.8570649579484412,
+    0.8529676338459583,
+    0.8498297111785158,
+    0.8477858596659721,
+    0.841829720329731,
+    0.8383035209584744,
+    0.8370629111503033,
+    0.8338071577092434,
+    0.8281944552634625,
+    0.8244593359054403,
+    0.819825881339134
+  ],
+  "training_seconds": 182.69790410000132,
+  "validation": {
+    "by_street": {
+      "0": {
+        "examples": 9068,
+        "mae_big_blinds": 4.954313278198242,
+        "rmse_big_blinds": 6.30207633972168
+      },
+      "1": {
+        "examples": 2932,
+        "mae_big_blinds": 5.010201454162598,
+        "rmse_big_blinds": 6.627588272094727
+      }
+    },
+    "correlation": 0.21077216556822237,
+    "mae_big_blinds": 4.967968940734863,
+    "mean_error_big_blinds": 0.05932893231511116,
+    "prediction_standard_deviation_big_blinds": 2.5247561931610107,
+    "r_squared": 0.011003688503036124,
+    "rmse_big_blinds": 6.383142471313477,
+    "target_standard_deviation_big_blinds": 6.418553829193115
+  },
+  "validation_examples": 12000
+}

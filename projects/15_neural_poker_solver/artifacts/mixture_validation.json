@@ -1,0 +1,196 @@
+{
+  "experiment": {
+    "baseline": "C:\\Users\\arnav\\Documents\\Codex\\2026-07-25\\i\\work\\quant-portfolio\\projects\\15_neural_poker_solver\\artifacts\\deep_cfr_checkpoint.pt",
+    "candidate": "C:\\Users\\arnav\\Documents\\Codex\\2026-07-25\\i\\work\\quant-portfolio\\projects\\15_neural_poker_solver\\artifacts\\v3\\deep_cfr_checkpoint.pt",
+    "direct_pairs": 3000,
+    "pairs_per_opponent": 1500,
+    "seed": 15500,
+    "selection_warning": "Use this grid only for model selection; rerun the chosen weight on a fresh seed and larger sample."
+  },
+  "mixtures": [
+    {
+      "baseline_weight": 0.8,
+      "candidate_weight": 0.2,
+      "direct_mixture_vs_v1": {
+        "ci95_high": 0.16327943914416584,
+        "ci95_low": -0.2414461058108325,
+        "duplicate_pairs": 3000,
+        "mean_big_blinds": -0.03908333333333333,
+        "standard_error": 0.10324631248852
+      },
+      "equal_weight_opponent_suite": {
+        "ci95_high": 0.013923672966849786,
+        "ci95_low": -0.04770145074462756,
+        "mean_improvement_big_blinds": -0.016888888888888887,
+        "standard_error": 0.015720694824356465
+      },
+      "paired_improvement_vs_v1": {
+        "calling_station": {
+          "baseline_mean_big_blinds": 0.49233333333333335,
+          "candidate_mean_big_blinds": 0.4683333333333333,
+          "ci95_high": 0.023772063955327737,
+          "ci95_low": -0.07177206395532773,
+          "duplicate_pairs": 1500,
+          "mean_improvement_big_blinds": -0.024,
+          "standard_error": 0.024373502018024355
+        },
+        "pot_pressure": {
+          "baseline_mean_big_blinds": 0.1975,
+          "candidate_mean_big_blinds": 0.20633333333333334,
+          "ci95_high": 0.06810607602814929,
+          "ci95_low": -0.050439409361482626,
+          "duplicate_pairs": 1500,
+          "mean_improvement_big_blinds": 0.008833333333333334,
+          "standard_error": 0.030241195252457123
+        },
+        "uniform_random": {
+          "baseline_mean_big_blinds": 0.39166666666666666,
+          "candidate_mean_big_blinds": 0.3561666666666667,
+          "ci95_high": 0.01693374478239862,
+          "ci95_low": -0.08793374478239861,
+          "duplicate_pairs": 1500,
+          "mean_improvement_big_blinds": -0.0355,
+          "standard_error": 0.026751910603264602
+        }
+      }
+    },
+    {
+      "baseline_weight": 0.6,
+      "candidate_weight": 0.4,
+      "direct_mixture_vs_v1": {
+        "ci95_high": 0.2834497349291736,
+        "ci95_low": -0.11628306826250691,
+        "duplicate_pairs": 3000,
+        "mean_big_blinds": 0.08358333333333333,
+        "standard_error": 0.1019726538754287
+      },
+      "equal_weight_opponent_suite": {
+        "ci95_high": 0.05022631804455354,
+        "ci95_low": -0.033115206933442436,
+        "mean_improvement_big_blinds": 0.008555555555555554,
+        "standard_error": 0.02126059310663163
+      },
+      "paired_improvement_vs_v1": {
+        "calling_station": {
+          "baseline_mean_big_blinds": 0.5905,
+          "candidate_mean_big_blinds": 0.586,
+          "ci95_high": 0.05124040425799371,
+          "ci95_low": -0.06024040425799371,
+          "duplicate_pairs": 1500,
+          "mean_improvement_big_blinds": -0.0045,
+          "standard_error": 0.028438981764282504
+        },
+        "pot_pressure": {
+          "baseline_mean_big_blinds": -0.1135,
+          "candidate_mean_big_blinds": -0.059666666666666666,
+          "ci95_high": 0.13670265345995924,
+          "ci95_low": -0.02903598679329257,
+          "duplicate_pairs": 1500,
+          "mean_improvement_big_blinds": 0.05383333333333333,
+          "standard_error": 0.0422802653707275
+        },
+        "uniform_random": {
+          "baseline_mean_big_blinds": 0.494,
+          "candidate_mean_big_blinds": 0.4703333333333333,
+          "ci95_high": 0.05152478984693315,
+          "ci95_low": -0.09885812318026649,
+          "duplicate_pairs": 1500,
+          "mean_improvement_big_blinds": -0.023666666666666666,
+          "standard_error": 0.03836298801714277
+        }
+      }
+    },
+    {
+      "baseline_weight": 0.4,
+      "candidate_weight": 0.6,
+      "direct_mixture_vs_v1": {
+        "ci95_high": 0.29395260610857604,
+        "ci95_low": -0.10028593944190939,
+        "duplicate_pairs": 3000,
+        "mean_big_blinds": 0.09683333333333333,
+        "standard_error": 0.10057105753838914
+      },
+      "equal_weight_opponent_suite": {
+        "ci95_high": 0.04084494931610978,
+        "ci95_low": -0.06262272709388755,
+        "mean_improvement_big_blinds": -0.010888888888888887,
+        "standard_error": 0.026394815410713608
+      },
+      "paired_improvement_vs_v1": {
+        "calling_station": {
+          "baseline_mean_big_blinds": 0.44416666666666665,
+          "candidate_mean_big_blinds": 0.4003333333333333,
+          "ci95_high": 0.02409425976922583,
+          "ci95_low": -0.1117609264358925,
+          "duplicate_pairs": 1500,
+          "mean_improvement_big_blinds": -0.043833333333333335,
+          "standard_error": 0.034656935256407735
+        },
+        "pot_pressure": {
+          "baseline_mean_big_blinds": -0.28933333333333333,
+          "candidate_mean_big_blinds": -0.25616666666666665,
+          "ci95_high": 0.13911888967365016,
+          "ci95_low": -0.07278555634031683,
+          "duplicate_pairs": 1500,
+          "mean_improvement_big_blinds": 0.033166666666666664,
+          "standard_error": 0.05405725663621607
+        },
+        "uniform_random": {
+          "baseline_mean_big_blinds": 0.49916666666666665,
+          "candidate_mean_big_blinds": 0.4771666666666667,
+          "ci95_high": 0.06881563011927197,
+          "ci95_low": -0.11281563011927198,
+          "duplicate_pairs": 1500,
+          "mean_improvement_big_blinds": -0.022,
+          "standard_error": 0.04633450516289386
+        }
+      }
+    },
+    {
+      "baseline_weight": 0.19999999999999996,
+      "candidate_weight": 0.8,
+      "direct_mixture_vs_v1": {
+        "ci95_high": 0.17346490424747832,
+        "ci95_low": -0.21479823758081165,
+        "duplicate_pairs": 3000,
+        "mean_big_blinds": -0.020666666666666667,
+        "standard_error": 0.09904671985415561
+      },
+      "equal_weight_opponent_suite": {
+        "ci95_high": 0.038019457092918166,
+        "ci95_low": -0.07757501264847373,
+        "mean_improvement_big_blinds": -0.01977777777777778,
+        "standard_error": 0.02948838513811018
+      },
+      "paired_improvement_vs_v1": {
+        "calling_station": {
+          "baseline_mean_big_blinds": 0.23733333333333334,
+          "candidate_mean_big_blinds": 0.2085,
+          "ci95_high": 0.053631421477197766,
+          "ci95_low": -0.11129808814386444,
+          "duplicate_pairs": 1500,
+          "mean_improvement_big_blinds": -0.028833333333333332,
+          "standard_error": 0.04207385449516893
+        },
+        "pot_pressure": {
+          "baseline_mean_big_blinds": 0.264,
+          "candidate_mean_big_blinds": 0.23066666666666666,
+          "ci95_high": 0.08107422540603276,
+          "ci95_low": -0.14774089207269941,
+          "duplicate_pairs": 1500,
+          "mean_improvement_big_blinds": -0.03333333333333333,
+          "standard_error": 0.05837120343845209
+        },
+        "uniform_random": {
+          "baseline_mean_big_blinds": 0.44733333333333336,
+          "candidate_mean_big_blinds": 0.45016666666666666,
+          "ci95_high": 0.10370532124684187,
+          "ci95_low": -0.09803865458017519,
+          "duplicate_pairs": 1500,
+          "mean_improvement_big_blinds": 0.0028333333333333335,
+          "standard_error": 0.0514652999558717
+        }
+      }
+    }
+  ]
+}

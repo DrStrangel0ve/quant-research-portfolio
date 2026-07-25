@@ -35,7 +35,7 @@ const MICRO_BOTS: Record<
     name: "Range Resolver",
     tag: "SEARCH",
     description:
-      "Bayes-filters your range, then searches every legal action with blueprint rollouts.",
+      "Bayes-filters your range, then uses stratified, common-random-number blueprint rollouts.",
     accent: "#f0c674",
   },
   pressure: {

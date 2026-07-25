@@ -1,0 +1,21 @@
+{
+  "direct_value_search_vs_v1": {
+    "ci95_high": 0.09915548523683046,
+    "ci95_low": -0.14615548523683045,
+    "duplicate_pairs": 8000,
+    "mean_big_blinds": -0.0235,
+    "standard_error": 0.06257932920246452
+  },
+  "experiment": {
+    "baseline": "C:\\Users\\arnav\\Documents\\Codex\\2026-07-25\\i\\work\\quant-portfolio\\projects\\15_neural_poker_solver\\artifacts\\deep_cfr_checkpoint.pt",
+    "belief_samples": 32,
+    "direct_pairs": 8000,
+    "improvement_weight": 0.15,
+    "predeclared_safety_gate": "ci95_low >= -0.10 BB/hand",
+    "search_streets": [
+      1
+    ],
+    "seed": 15930,
+    "value_checkpoint": "C:\\Users\\arnav\\Documents\\Codex\\2026-07-25\\i\\work\\quant-portfolio\\projects\\15_neural_poker_solver\\artifacts\\value_v3_equity\\state_value_checkpoint.pt"
+  }
+}

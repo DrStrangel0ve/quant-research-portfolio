@@ -1,0 +1,61 @@
+{
+  "experiment": {
+    "baseline": "C:\\Users\\arnav\\Documents\\Codex\\2026-07-25\\i\\work\\quant-portfolio\\projects\\15_neural_poker_solver\\artifacts\\deep_cfr_checkpoint.pt",
+    "belief_samples": 32,
+    "direct_pairs": 2000,
+    "pairs_per_opponent": 500,
+    "search_streets": [
+      1
+    ],
+    "seed": 15920,
+    "selection_warning": "Select one search weight here, then evaluate it once on a fresh seed.",
+    "value_checkpoint": "C:\\Users\\arnav\\Documents\\Codex\\2026-07-25\\i\\work\\quant-portfolio\\projects\\15_neural_poker_solver\\artifacts\\value_v3_equity\\state_value_checkpoint.pt"
+  },
+  "value_search_policies": [
+    {
+      "direct_value_search_vs_v1": {
+        "ci95_high": 0.3047295099785682,
+        "ci95_low": -0.1964795099785682,
+        "duplicate_pairs": 2000,
+        "mean_big_blinds": 0.054125,
+        "standard_error": 0.12785944386661643
+      },
+      "equal_weight_opponent_suite": {
+        "ci95_high": 0.14778636121161065,
+        "ci95_low": 0.03888030545505602,
+        "mean_improvement_big_blinds": 0.09333333333333334,
+        "standard_error": 0.027782157080753735
+      },
+      "improvement_weight": 0.15,
+      "paired_improvement_vs_v1": {
+        "calling_station": {
+          "baseline_mean_big_blinds": -0.198,
+          "candidate_mean_big_blinds": -0.1155,
+          "ci95_high": 0.16779773518244495,
+          "ci95_low": -0.0027977351824449576,
+          "duplicate_pairs": 500,
+          "mean_improvement_big_blinds": 0.0825,
+          "standard_error": 0.04351925264410457
+        },
+        "pot_pressure": {
+          "baseline_mean_big_blinds": -0.216,
+          "candidate_mean_big_blinds": -0.097,
+          "ci95_high": 0.21726825889478465,
+          "ci95_low": 0.020731741105215334,
+          "duplicate_pairs": 500,
+          "mean_improvement_big_blinds": 0.119,
+          "standard_error": 0.0501368667830534
+        },
+        "uniform_random": {
+          "baseline_mean_big_blinds": 0.898,
+          "candidate_mean_big_blinds": 0.9765,
+          "ci95_high": 0.17726151007626953,
+          "ci95_low": -0.02026151007626953,
+          "duplicate_pairs": 500,
+          "mean_improvement_big_blinds": 0.0785,
+          "standard_error": 0.05038852554911711
+        }
+      }
+    }
+  ]
+}

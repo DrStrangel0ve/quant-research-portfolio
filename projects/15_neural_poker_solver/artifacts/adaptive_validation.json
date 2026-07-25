@@ -1,0 +1,148 @@
+{
+  "adaptive_policies": [
+    {
+      "direct_adaptive_vs_v1": {
+        "ci95_high": 0.19034170193561376,
+        "ci95_low": -0.21567503526894707,
+        "duplicate_pairs": 3000,
+        "mean_big_blinds": -0.012666666666666666,
+        "standard_error": 0.1035756982664696
+      },
+      "equal_weight_opponent_suite": {
+        "ci95_high": 0.06495550389390489,
+        "ci95_low": 0.004127829439428431,
+        "mean_improvement_big_blinds": 0.034541666666666665,
+        "standard_error": 0.015517263891448078
+      },
+      "paired_improvement_vs_v1": {
+        "calling_station": {
+          "baseline_mean_big_blinds": 0.40975,
+          "candidate_mean_big_blinds": 0.40975,
+          "ci95_high": 0.0,
+          "ci95_low": 0.0,
+          "duplicate_pairs": 2000,
+          "mean_improvement_big_blinds": 0.0,
+          "standard_error": 0.0
+        },
+        "pot_pressure": {
+          "baseline_mean_big_blinds": -0.020375,
+          "candidate_mean_big_blinds": 0.090875,
+          "ci95_high": 0.1962823597217549,
+          "ci95_low": 0.026217640278245122,
+          "duplicate_pairs": 2000,
+          "mean_improvement_big_blinds": 0.11125,
+          "standard_error": 0.04338385700089535
+        },
+        "uniform_random": {
+          "baseline_mean_big_blinds": 0.554125,
+          "candidate_mean_big_blinds": 0.5465,
+          "ci95_high": 0.025458398466822567,
+          "ci95_low": -0.040708398466822567,
+          "duplicate_pairs": 2000,
+          "mean_improvement_big_blinds": -0.007625,
+          "standard_error": 0.01687928493205233
+        }
+      },
+      "threshold": 0.5
+    },
+    {
+      "direct_adaptive_vs_v1": {
+        "ci95_high": 0.24498822440598889,
+        "ci95_low": -0.16215489107265557,
+        "duplicate_pairs": 3000,
+        "mean_big_blinds": 0.041416666666666664,
+        "standard_error": 0.1038630396629195
+      },
+      "equal_weight_opponent_suite": {
+        "ci95_high": 0.0291446037933572,
+        "ci95_low": -0.0276446037933572,
+        "mean_improvement_big_blinds": 0.0007500000000000001,
+        "standard_error": 0.014487042751712857
+      },
+      "paired_improvement_vs_v1": {
+        "calling_station": {
+          "baseline_mean_big_blinds": 0.47425,
+          "candidate_mean_big_blinds": 0.47425,
+          "ci95_high": 0.0,
+          "ci95_low": 0.0,
+          "duplicate_pairs": 2000,
+          "mean_improvement_big_blinds": 0.0,
+          "standard_error": 0.0
+        },
+        "pot_pressure": {
+          "baseline_mean_big_blinds": -0.153875,
+          "candidate_mean_big_blinds": -0.14625,
+          "ci95_high": 0.08781253094182892,
+          "ci95_low": -0.07256253094182893,
+          "duplicate_pairs": 2000,
+          "mean_improvement_big_blinds": 0.007625,
+          "standard_error": 0.04091200558256578
+        },
+        "uniform_random": {
+          "baseline_mean_big_blinds": 0.611,
+          "candidate_mean_big_blinds": 0.605625,
+          "ci95_high": 0.023369418635429802,
+          "ci95_low": -0.034119418635429805,
+          "duplicate_pairs": 2000,
+          "mean_improvement_big_blinds": -0.005375,
+          "standard_error": 0.014665519711953982
+        }
+      },
+      "threshold": 0.65
+    },
+    {
+      "direct_adaptive_vs_v1": {
+        "ci95_high": 0.15090935527608307,
+        "ci95_low": -0.2447426886094164,
+        "duplicate_pairs": 3000,
+        "mean_big_blinds": -0.04691666666666667,
+        "standard_error": 0.1009316438483417
+      },
+      "equal_weight_opponent_suite": {
+        "ci95_high": 0.025465060058457244,
+        "ci95_low": -0.017548393391790575,
+        "mean_improvement_big_blinds": 0.003958333333333334,
+        "standard_error": 0.01097281975771628
+      },
+      "paired_improvement_vs_v1": {
+        "calling_station": {
+          "baseline_mean_big_blinds": 0.3,
+          "candidate_mean_big_blinds": 0.3,
+          "ci95_high": 0.0,
+          "ci95_low": 0.0,
+          "duplicate_pairs": 2000,
+          "mean_improvement_big_blinds": 0.0,
+          "standard_error": 0.0
+        },
+        "pot_pressure": {
+          "baseline_mean_big_blinds": 0.316625,
+          "candidate_mean_big_blinds": 0.31525,
+          "ci95_high": 0.05756258743869693,
+          "ci95_low": -0.060312587438696934,
+          "duplicate_pairs": 2000,
+          "mean_improvement_big_blinds": -0.001375,
+          "standard_error": 0.03007019767280456
+        },
+        "uniform_random": {
+          "baseline_mean_big_blinds": 0.533875,
+          "candidate_mean_big_blinds": 0.547125,
+          "ci95_high": 0.039502893874169075,
+          "ci95_low": -0.013002893874169077,
+          "duplicate_pairs": 2000,
+          "mean_improvement_big_blinds": 0.01325,
+          "standard_error": 0.013394333609269938
+        }
+      },
+      "threshold": 0.8
+    }
+  ],
+  "experiment": {
+    "baseline": "C:\\Users\\arnav\\Documents\\Codex\\2026-07-25\\i\\work\\quant-portfolio\\projects\\15_neural_poker_solver\\artifacts\\deep_cfr_checkpoint.pt",
+    "direct_pairs": 3000,
+    "information_boundary": "adaptation uses only public opponent actions and legal-action sets",
+    "pairs_per_opponent": 2000,
+    "pressure_specialist": "C:\\Users\\arnav\\Documents\\Codex\\2026-07-25\\i\\work\\quant-portfolio\\projects\\15_neural_poker_solver\\artifacts\\v3\\deep_cfr_checkpoint.pt",
+    "seed": 15600,
+    "selection_warning": "Select a threshold here, then evaluate it once on a fresh seed."
+  }
+}
