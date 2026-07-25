@@ -27,20 +27,25 @@ test("server-renders the finished poker arena and metadata", async () => {
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
   const html = await response.text();
-  assert.match(html, /<title>Poker Lab — Play the CFR\+ Policy<\/title>/i);
+  assert.match(html, /<title>Poker Lab — Exact CFR\+ and Neural No-Limit<\/title>/i);
   assert.match(html, /Play the policy/);
   assert.match(html, /CFR\+ 20K/);
   assert.match(html, /RLCard CFR/);
   assert.match(html, /Exact Punisher/);
+  assert.match(html, /MICRO NL \/ NEURAL/i);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
 });
 
 test("ships a real trained policy and bespoke social preview", async () => {
   const policyUrl = new URL("../public/poker-policies.json", import.meta.url);
   const socialUrl = new URL("../public/og.png", import.meta.url);
+  const microPolicyUrl = new URL("../public/micro-strategy.json", import.meta.url);
   const payload = JSON.parse(await readFile(policyUrl, "utf8"));
   assert.equal(payload.format, "quantlab-leduc-arena-v1");
   assert.equal(Object.keys(payload.trained.policy).length, 288);
   assert.equal(Object.keys(payload.rlcard_reference.policy).length, 84);
+  const microPayload = JSON.parse(await readFile(microPolicyUrl, "utf8"));
+  assert.equal(microPayload.format, "quantlab-royal-micro-strategy-v1");
+  assert.equal(microPayload.network.input_size, 126);
   await access(socialUrl);
 });

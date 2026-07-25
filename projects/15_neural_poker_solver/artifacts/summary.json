@@ -1,0 +1,85 @@
+{
+  "audit_scope": {
+    "confidence_intervals": "paired normal 95% intervals over duplicate deals",
+    "exact_exploitability": "not tractable for this larger game; Project 13 remains the exact oracle",
+    "reported_units": "big blinds per hand"
+  },
+  "belief_rollout_resolver": {
+    "description": "Bayes-filtered opponent range plus one-step action search with blueprint rollouts; not a safe subgame solver",
+    "match_vs_blueprint": {
+      "ci95_high": 1.4215109421584595,
+      "ci95_low": -1.5715109421584594,
+      "duplicate_pairs": 50,
+      "mean_big_blinds": -0.075,
+      "standard_error": 0.7635259908971732
+    },
+    "rollouts_per_action": 32
+  },
+  "duplicate_evaluation": {
+    "neural_blueprint_matchups": {
+      "calling_station": {
+        "ci95_high": 0.6534811701072054,
+        "ci95_low": 0.0807688298927946,
+        "duplicate_pairs": 2000,
+        "mean_big_blinds": 0.367125,
+        "standard_error": 0.1461000867893905
+      },
+      "pot_pressure": {
+        "ci95_high": 0.5908078511360079,
+        "ci95_low": -0.0673078511360079,
+        "duplicate_pairs": 2000,
+        "mean_big_blinds": 0.26175,
+        "standard_error": 0.16788665874286116
+      },
+      "uniform_random": {
+        "ci95_high": 0.8336032766451691,
+        "ci95_low": 0.392646723354831,
+        "duplicate_pairs": 2000,
+        "mean_big_blinds": 0.613125,
+        "standard_error": 0.11248891665569852
+      }
+    },
+    "pairs_per_baseline": 2000,
+    "self_play_control": {
+      "ci95_high": 0.27199762377846726,
+      "ci95_low": -0.21999762377846724,
+      "duplicate_pairs": 2000,
+      "mean_big_blinds": 0.026,
+      "standard_error": 0.12550899172370777
+    }
+  },
+  "experiment": {
+    "algorithm": "external-sampling neural CFR with reservoir replay",
+    "config": {
+      "advantage_steps": 50,
+      "batch_size": 128,
+      "hidden_size": 128,
+      "iterations": 1600,
+      "learning_rate": 0.001,
+      "memory_capacity": 100000,
+      "seed": 15001,
+      "strategy_steps": 500,
+      "train_every": 20,
+      "traversals_per_player": 6
+    },
+    "device": "cpu",
+    "game": "Royal Micro Hold'em: 24 cards, 20-chip stacks, two streets",
+    "seed": 15001,
+    "training_seconds": 114.61560980000013
+  },
+  "training": {
+    "advantage_samples": [
+      43438,
+      45071
+    ],
+    "final_diagnostic": {
+      "advantage_loss_player_one": 20.25079917907715,
+      "advantage_loss_player_zero": 25.81006622314453,
+      "advantage_samples_player_one": 45071,
+      "advantage_samples_player_zero": 43438,
+      "iteration": 1600,
+      "strategy_samples": 100000
+    },
+    "strategy_samples": 100000
+  }
+}

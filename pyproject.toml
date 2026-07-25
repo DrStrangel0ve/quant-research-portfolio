@@ -29,6 +29,9 @@ poker = [
   "rlcard==1.2.0",
   "setuptools>=68,<81",
 ]
+neural-poker = [
+  "torch>=2.4,<3",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/quantlab"]
@@ -50,5 +53,5 @@ strict = true
 packages = ["quantlab"]
 
 [[tool.mypy.overrides]]
-module = ["rlcard.*", "scipy.*"]
+module = ["rlcard.*", "scipy.*", "torch.*"]
 ignore_missing_imports = true

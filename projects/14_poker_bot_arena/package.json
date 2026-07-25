@@ -9,7 +9,7 @@
     "dev": "vinext dev",
     "build": "vinext build",
     "start": "vinext start",
-    "test": "npm run build && node --test --experimental-strip-types tests/rendered-html.test.mjs tests/game.test.ts",
+    "test": "npm run build && node --test --experimental-strip-types tests/rendered-html.test.mjs tests/game.test.ts tests/micro-game.test.ts",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
   },
   "dependencies": {
