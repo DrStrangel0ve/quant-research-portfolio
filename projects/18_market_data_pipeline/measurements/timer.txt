@@ -1,0 +1,1 @@
+clock_pair_ns,p50=16,p99=21,max=130; steady=1; producer_cpu=0; consumer_cpu=2

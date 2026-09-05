@@ -1,0 +1,49 @@
+name: Market data pipeline
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  correctness:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            compiler: GCC
+            arguments: -DCMAKE_CXX_COMPILER=g++
+          - os: ubuntu-latest
+            compiler: Clang
+            arguments: -DCMAKE_CXX_COMPILER=clang++
+          - os: windows-latest
+            compiler: MSVC
+            arguments: ""
+    runs-on: ${{ matrix.os }}
+    name: Pipeline Release (${{ matrix.compiler }})
+    steps:
+      - uses: actions/checkout@v7
+      - run: cmake -S projects/18_market_data_pipeline -B build/pipeline -DCMAKE_BUILD_TYPE=Release ${{ matrix.arguments }}
+      - run: cmake --build build/pipeline --config Release --parallel
+      - run: ctest --test-dir build/pipeline -C Release --output-on-failure
+
+  sanitizers:
+    strategy:
+      fail-fast: false
+      matrix:
+        sanitizer: [address, thread]
+    runs-on: ubuntu-latest
+    name: Pipeline sanitizer (${{ matrix.sanitizer }})
+    steps:
+      - uses: actions/checkout@v7
+      - run: >-
+          cmake -S projects/18_market_data_pipeline -B build/pipeline
+          -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++
+          -DPIPELINE_SANITIZER=${{ matrix.sanitizer }}
+      - run: cmake --build build/pipeline --parallel
+      - name: Run sanitizer tests
+        run: ctest --test-dir build/pipeline --output-on-failure

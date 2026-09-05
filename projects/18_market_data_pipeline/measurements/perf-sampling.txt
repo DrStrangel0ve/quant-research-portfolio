@@ -1,0 +1,29 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 2K of event 'cpu-clock:u'
+# Event count (approx.): 607750000
+#
+# Overhead  Command          Shared Object         Symbol
+# ........  ...............  ....................  ......................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+#
+    24.11%  pipeline_benchm  libc.so.6             [.] __sched_yield
+    17.15%  pipeline_benchm  [vdso]                [.] __vdso_clock_gettime
+     7.98%  pipeline_benchm  libc.so.6             [.] clock_gettime
+     7.82%  pipeline_benchm  libstdc++.so.6.0.33   [.] std::chrono::_V2::steady_clock::now()
+     6.33%  pipeline_benchm  libc.so.6             [.] pthread_mutex_lock
+     5.76%  pipeline_benchm  libc.so.6             [.] pthread_mutex_unlock
+     5.39%  pipeline_benchm  pipeline_benchmark    [.] void std::__introsort_loop<__gnu_cxx::__normal_iterator<long*, std::vector<long, std::allocator<long> > >, long, __gnu_cxx::__ops::_Iter_less_iter>(__gnu_cxx::__normal_iterator<long*, std::vector<long, std::allocator<long> > >, __gnu_cxx::__normal_iterator<long*, std::vector<long, std::allocator<long> > >, long, __gnu_cxx::__ops::_Iter_less_iter) [clone .isra.0]
+     4.03%  pipeline_benchm  pipeline_benchmark    [.] (anonymous namespace)::Measurements (anonymous namespace)::measure<mdp::MutexQueue>(std::vector<std::array<std::byte, 48ul>, std::allocator<std::array<std::byte, 48ul> > > const&, std::vector<std::array<std::byte, 48ul>, std::allocator<std::array<std::byte, 48ul> > > const&, std::vector<lob::Order, std::allocator<lob::Order> > const&, unsigned long, (anonymous namespace)::Options const&)
+     3.50%  pipeline_benchm  pipeline_benchmark    [.] std::thread::_State_impl<std::thread::_Invoker<std::tuple<(anonymous namespace)::measure<mdp::MutexQueue>(std::vector<std::array<std::byte, 48ul>, std::allocator<std::array<std::byte, 48ul> > > const&, std::vector<std::array<std::byte, 48ul>, std::allocator<std::array<std::byte, 48ul> > > const&, std::vector<lob::Order, std::allocator<lob::Order> > const&, unsigned long, (anonymous namespace)::Options const&)::{lambda(std::stop_token)#1}, std::stop_token> > >::_M_run()
+     2.92%  pipeline_benchm  pipeline_benchmark    [.] std::thread::_State_impl<std::thread::_Invoker<std::tuple<(anonymous namespace)::measure<mdp::SpscQueue>(std::vector<std::array<std::byte, 48ul>, std::allocator<std::array<std::byte, 48ul> > > const&, std::vector<std::array<std::byte, 48ul>, std::allocator<std::array<std::byte, 48ul> > > const&, std::vector<lob::Order, std::allocator<lob::Order> > const&, unsigned long, (anonymous namespace)::Options const&)::{lambda(std::stop_token)#1}, std::stop_token> > >::_M_run()
+     2.84%  pipeline_benchm  pipeline_benchmark    [.] (anonymous namespace)::Measurements (anonymous namespace)::measure<mdp::SpscQueue>(std::vector<std::array<std::byte, 48ul>, std::allocator<std::array<std::byte, 48ul> > > const&, std::vector<std::array<std::byte, 48ul>, std::allocator<std::array<std::byte, 48ul> > > const&, std::vector<lob::Order, std::allocator<lob::Order> > const&, unsigned long, (anonymous namespace)::Options const&)
+     2.43%  pipeline_benchm  pipeline_benchmark    [.] mdp::Pipeline::on_packet(std::span<std::byte const, 18446744073709551615ul>) [clone .isra.0]
+     1.36%  pipeline_benchm  pipeline_benchmark    [.] std::chrono::_V2::steady_clock::now()@plt
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

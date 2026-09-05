@@ -1,0 +1,14 @@
+# started on Sun Sep  6 01:52:25 2026
+
+
+ Performance counter stats for 'projects/18_market_data_pipeline/build/linux-ninja/pipeline_benchmark --events 100000 --repeats 5 --producer-cpu 0 --consumer-cpu 2':
+
+           8230.92 msec task-clock:u                     #    2.114 CPUs utilized
+                 0      context-switches:u               #    0.000 /sec
+                 0      cpu-migrations:u                 #    0.000 /sec
+              3004      page-faults:u                    #  364.965 /sec
+
+       3.893535561 seconds time elapsed
+
+       3.322408000 seconds user
+       4.909100000 seconds sys
