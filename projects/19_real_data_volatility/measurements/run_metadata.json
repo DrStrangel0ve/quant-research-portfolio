@@ -1,0 +1,62 @@
+{
+  "description": "Retrospective fixed holdout; not preregistered or prospective.",
+  "target": "Daily sum of 24 hourly squared log returns, grouped by UTC bar opening day",
+  "split": {
+    "warmup": "2023-12",
+    "train": "2024",
+    "validation": "2025",
+    "test": "2026-01-01 through 2026-06-30 inclusive"
+  },
+  "selection": "minimum 2025 mean QLIKE per asset; fixed candidates; first minimum tie break",
+  "candidates": [
+    0.9,
+    0.94,
+    0.97,
+    0.99
+  ],
+  "selected_lambdas": {
+    "BTCUSDT": 0.9,
+    "ETHUSDT": 0.9
+  },
+  "daily_counts": {
+    "BTCUSDT": {
+      "hourly_rows": 22632,
+      "daily_calendar_rows": 943,
+      "complete_days": 942,
+      "missing_days": 1,
+      "training_days": 366,
+      "validation_days": 365,
+      "test_calendar_days": 181,
+      "test_scored_days": 181,
+      "variance_floor_days": 0
+    },
+    "ETHUSDT": {
+      "hourly_rows": 22632,
+      "daily_calendar_rows": 943,
+      "complete_days": 942,
+      "missing_days": 1,
+      "training_days": 366,
+      "validation_days": 365,
+      "test_calendar_days": 181,
+      "test_scored_days": 181,
+      "variance_floor_days": 0
+    }
+  },
+  "variance_floor": 1e-12,
+  "floor_usage": "positive forecast floor; QLIKE target floor only; raw target for MSE",
+  "bootstrap": {
+    "method": "paired non-circular moving-block percentile interval",
+    "block_calendar_days": 7,
+    "resamples": 2000,
+    "seed": 20260905,
+    "confidence": 0.95,
+    "direction": "selected EWMA minus baseline",
+    "scope": "conditional on fixed selected model; no multiplicity adjustment"
+  },
+  "manifest_sha256": "df866416cbf4e99451b47c72b11b627518675204da0d13bd67d343a8601ccd8b",
+  "study_source_sha256": "ec8863e3c22b010bc7479944335f8dde13e5c71cdc74768ad612e489a9f16e74",
+  "python": "3.13.3",
+  "numpy": "2.2.6",
+  "pandas": "2.3.3",
+  "elapsed_seconds": 0.5401223000371829
+}

@@ -18,4 +18,5 @@ build/
 projects/**/results/*.png
 projects/**/results/*.csv
 projects/**/results/*.json
+projects/**/data_cache/
 !projects/**/results/.gitkeep

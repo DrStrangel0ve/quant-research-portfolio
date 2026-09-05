@@ -117,3 +117,35 @@ Questions to prepare:
 The C++ project is single-threaded. It does not establish lock-free concurrency,
 networking, or production exchange integration experience. The execution lab
 does not establish a profitable strategy on historical or live market data.
+
+## Systems and empirical research extensions
+
+For HFT software engineering, lead with
+[project 18](../projects/18_market_data_pipeline/README.md). Follow one packet
+from the UDP receiver through a bounded queue, generation fence, parser,
+snapshot state machine and risk check. Explain the acquire/release edges and
+why a full queue needs a loss signal outside the queue. Reproduce both the fast
+throughput run and the poor tail-latency case. The matching core is still owned
+by one consumer thread; concurrency is across pipeline stages.
+
+For quant research, lead with
+[project 19](../projects/19_real_data_volatility/README.md). Explain source
+checksums, the timestamp-unit transition, the 2025 model-selection period, and
+the separate 2026 evaluation. Defend the realized-variance proxy and bootstrap
+assumptions. A result on two crypto pairs at one venue is limited empirical
+evidence, not general market alpha.
+
+Possible resume bullets, after reproducing and understanding the work:
+
+- Built a C++20 UDP feed-processing lab with bounded SPSC/mutex queues,
+  transactional snapshot recovery, receipt-age checks and a pure pretrade risk
+  gate; benchmarked throughput and burst latency and verified concurrency with
+  ThreadSanitizer.
+- Evaluated causal volatility forecasts on checksum-verified BTC/ETH hourly
+  archives using separate chronological model-selection and test periods,
+  baseline comparisons and paired block-bootstrap uncertainty estimates.
+
+The next useful evidence should come from a real exchange protocol adapter,
+realistic execution data, a reviewed external contribution, or a research
+collaboration. Each addition should answer a specific question, expose failure
+cases, and produce reproducible evidence. Repository size is not a hiring metric.

@@ -30,11 +30,14 @@ execution frictions, and experiments that can be challenged in an interview.
 | 15 | [Neural poker solver](projects/15_neural_poker_solver/README.md) | Game theory / ML | Deep CFR, suit-canonical features, Bayesian ranges, and rollout search |
 | 16 | [C++ order book and replay](projects/16_cpp_order_book_replay/README.md) | Trading systems | Integer ticks, indexed cancellation, differential testing, and measured replay performance |
 | 17 | [Execution stress lab](projects/17_execution_stress_lab/README.md) | Trading experiments | Queue depletion, delayed order messages, adverse selection, and paired policy evaluation |
+| 18 | [Market-data pipeline](projects/18_market_data_pipeline/README.md) | Systems engineering | UDP, bounded concurrency, recovery, freshness, risk checks, and measured tail latency |
+| 19 | [Real-data volatility study](projects/19_real_data_volatility/README.md) | Empirical research | Verified public archives, chronological selection, held-out forecast evaluation, and uncertainty |
 
-For a focused engineering example, start with project 16 and its reference-engine
-comparison. For a trading discussion, start with project 17 and explain how its
-execution assumptions affect the policy comparison. Both extend the simpler
-microstructure models earlier in this portfolio.
+For systems engineering, start with project 18 and trace a lost packet through
+recovery; project 16 supplies its matching engine and reference comparison.
+For empirical research, start with project 19 and explain the selection/test
+boundary. For execution modeling, project 17 makes queue and latency assumptions
+explicit. These projects extend the simpler models earlier in the portfolio.
 
 ## Research safeguards
 
@@ -72,8 +75,15 @@ python projects/17_execution_stress_lab/run.py
 python scripts/run_all.py
 ```
 
-Project 16 uses C++20 and CMake independently of the Python package. Its README
-contains build, replay, correctness-test, and benchmark commands.
+Projects 16 and 18 use C++20 and CMake independently of the Python package. Their
+READMEs contain build, correctness-test, and benchmark commands. Project 19 is
+opt-in because it downloads public market-data archives on first use:
+
+```bash
+python projects/19_real_data_volatility/run.py --download
+# After the verified archives are cached, rerun offline:
+python projects/19_real_data_volatility/run.py
+```
 
 Each project writes generated artifacts beneath its own `results/` directory.
 Those artifacts are intentionally gitignored so a clean checkout always proves
@@ -88,8 +98,10 @@ projects/14_*/       deployable exact and neural TypeScript poker arena
 projects/15_*/       optional PyTorch game-solving experiment
 projects/16_*/       standalone C++20 order book, replay, tests, and benchmarks
 projects/17_*/       causal execution stress experiments and paired results
+projects/18_*/       UDP transport, bounded queues, recovery, risk and profiling
+projects/19_*/       checksum-pinned historical data and held-out volatility study
 tests/               unit, invariant, and anti-look-ahead tests
-.github/workflows/   Python 3.11/3.12 quality gates
+.github/workflows/   Python, browser, cross-compiler C++, and sanitizer checks
 ```
 
 ## What to discuss in an interview

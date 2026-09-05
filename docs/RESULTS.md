@@ -81,6 +81,22 @@ specified synthetic model, not a real-market return estimate. See the
 [execution stress README](../projects/17_execution_stress_lab/README.md) for
 all scenarios, seed identifiers, accounting rules, and assumptions.
 
+## Concurrent transport and empirical extensions
+
+[Project 18](../projects/18_market_data_pipeline/RESULTS.md) records five repeats
+of a verified 100,000-event synthetic pipeline workload on Linux under WSL2.
+Median throughput was 12.94 million events/s with SPSC and 3.38 million with a
+mutex queue. SPSC did not win the smaller-burst median p99 comparison; every
+repeat and the larger scheduling outliers are retained. UDP failures, snapshot
+recovery, queue loss, and stale data are checked separately from the lossless
+in-memory benchmark. Results describe this host and workload, not exchange latency.
+
+[Project 19](../projects/19_real_data_volatility/RESULTS.md) extends the portfolio
+to public historical BTC/ETH hourly data, with publisher checksums pinned in a
+manifest. Model selection uses 2025; held-out evaluation uses January–June 2026.
+The study reports forecasting losses and uncertainty rather than simulated
+trading profits. Its project report contains the reproduced estimates.
+
 ## Verification command
 
 ```bash
