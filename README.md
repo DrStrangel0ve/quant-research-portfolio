@@ -28,6 +28,13 @@ execution frictions, and experiments that can be challenged in an interview.
 | 13 | [Poker CFR+ lab](projects/13_poker_cfr_lab/README.md) | Game theory | From-scratch CFR+, exact best response, and RLCard face-off |
 | 14 | [Playable poker bot arena](projects/14_poker_bot_arena/README.md) | Interactive research | Human play against trained, reference, exact, and heuristic bots |
 | 15 | [Neural poker solver](projects/15_neural_poker_solver/README.md) | Game theory / ML | Deep CFR, suit-canonical features, Bayesian ranges, and rollout search |
+| 16 | [C++ order book and replay](projects/16_cpp_order_book_replay/README.md) | Trading systems | Integer ticks, indexed cancellation, differential testing, and measured replay performance |
+| 17 | [Execution stress lab](projects/17_execution_stress_lab/README.md) | Trading experiments | Queue depletion, delayed order messages, adverse selection, and paired policy evaluation |
+
+For a focused engineering example, start with project 16 and its reference-engine
+comparison. For a trading discussion, start with project 17 and explain how its
+execution assumptions affect the policy comparison. Both extend the simpler
+microstructure models earlier in this portfolio.
 
 ## Research safeguards
 
@@ -61,8 +68,12 @@ python projects/01_option_pricing/run.py
 python projects/13_poker_cfr_lab/run.py
 python -m pip install -e ".[neural-poker]"
 python projects/15_neural_poker_solver/run.py
+python projects/17_execution_stress_lab/run.py
 python scripts/run_all.py
 ```
+
+Project 16 uses C++20 and CMake independently of the Python package. Its README
+contains build, replay, correctness-test, and benchmark commands.
 
 Each project writes generated artifacts beneath its own `results/` directory.
 Those artifacts are intentionally gitignored so a clean checkout always proves
@@ -75,6 +86,8 @@ src/quantlab/        reusable, tested research components
 projects/            independent experiments and project notes
 projects/14_*/       deployable exact and neural TypeScript poker arena
 projects/15_*/       optional PyTorch game-solving experiment
+projects/16_*/       standalone C++20 order book, replay, tests, and benchmarks
+projects/17_*/       causal execution stress experiments and paired results
 tests/               unit, invariant, and anti-look-ahead tests
 .github/workflows/   Python 3.11/3.12 quality gates
 ```

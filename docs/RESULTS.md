@@ -62,6 +62,25 @@ figures are for the synthetic 24-card Royal Micro Hold'em benchmark. They
 demonstrate a reproducible game-solving pipeline and are not claims about full
 no-limit Texas Hold'em or real-money performance.
 
+## Trading systems and execution stress
+
+Project 16 adds a C++20 engine and an independent scan-based reference. Its
+Release-active test suite compares trades and FIFO state across 40,000 seeded
+events, including cancellation, partial fills, duplicate rejection, and quantity
+conservation. Machine-specific benchmark results, workload sizes, timing regions,
+and timer-resolution caveats are recorded in the
+[C++ project README](../projects/16_cpp_order_book_replay/README.md).
+
+Project 17 compares two fixed quoting policies across six synthetic execution
+scenarios. The default experiment uses 48 paired seeds and 1,500 events per seed.
+In the baseline run, inventory-aware quoting reduced mean absolute inventory
+from 4.006 to 1.206 units, but its mean net P&L difference versus symmetric
+quoting was -0.339 model dollars, with a paired 95% interval of [-0.765, 0.087].
+The interval does not establish a P&L improvement. This is evidence about the
+specified synthetic model, not a real-market return estimate. See the
+[execution stress README](../projects/17_execution_stress_lab/README.md) for
+all scenarios, seed identifiers, accounting rules, and assumptions.
+
 ## Verification command
 
 ```bash
