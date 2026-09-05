@@ -1,0 +1,49 @@
+name: C++ order book
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  correctness:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            compiler: GCC
+            arguments: -DCMAKE_CXX_COMPILER=g++
+          - os: ubuntu-latest
+            compiler: Clang
+            arguments: -DCMAKE_CXX_COMPILER=clang++
+          - os: windows-latest
+            compiler: MSVC
+            arguments: ""
+    runs-on: ${{ matrix.os }}
+    name: Release correctness (${{ matrix.compiler }})
+    steps:
+      - uses: actions/checkout@v7
+      - name: Configure
+        run: cmake -S projects/16_cpp_order_book_replay -B build/order-book -DCMAKE_BUILD_TYPE=Release ${{ matrix.arguments }}
+      - name: Build
+        run: cmake --build build/order-book --config Release --parallel
+      - name: Test
+        run: ctest --test-dir build/order-book -C Release --output-on-failure
+
+  sanitizers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Configure address and undefined-behavior checks
+        run: >-
+          cmake -S projects/16_cpp_order_book_replay -B build/order-book-sanitize
+          -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++
+          -DBOOK_SANITIZERS=ON
+      - name: Build
+        run: cmake --build build/order-book-sanitize --parallel
+      - name: Test
+        run: ctest --test-dir build/order-book-sanitize --output-on-failure

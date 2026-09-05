@@ -58,7 +58,7 @@ def simulate_gambler_ruin(
     if n_trials <= 0:
         raise ValueError("n_trials must be positive")
     wealth = np.full(n_trials, initial_wealth, dtype=int)
-    active = np.ones(n_trials, dtype=bool)
+    active: NDArray[np.bool_] = np.ones(n_trials, dtype=bool)
     while active.any():
         indices = np.flatnonzero(active)
         outcomes = rng.random(len(indices)) < win_probability

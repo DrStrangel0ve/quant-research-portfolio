@@ -30,6 +30,12 @@ mechanism demonstration into a defensible empirical claim?*
 
 Start with:
 
+- **[Execution stress lab](../projects/17_execution_stress_lab/README.md)** —
+  begin with event ordering, the distinction between a submitted order and a
+  live quote, queue depletion, adverse selection, and paired policy comparisons.
+  Explain why a result can reverse when the execution assumptions change and
+  why synthetic evidence cannot establish market alpha.
+
 1. **Inventory-aware market making** — reservation-price skew, spread/fill
    tradeoffs, and why independent Poisson fills are optimistic.
 2. **Limit order book** — matching priority, partial fills, and marketable
@@ -44,6 +50,12 @@ reverse the simulated result?*
 ## Quant developer
 
 Start with:
+
+- **[C++ order book and replay](../projects/16_cpp_order_book_replay/README.md)** —
+  explain price-time priority, integer ticks, indexing and iterator lifetime,
+  compare against the reference implementation, and reproduce the benchmark.
+  Discuss workload dependence and the distinction between processing latency
+  inside one process and end-to-end exchange latency.
 
 1. **Backtest engine** — typed result objects, explicit audit trail, cost model,
    and one-bar anti-look-ahead semantics.
@@ -73,3 +85,35 @@ concise draft:
 Avoid quoting synthetic Sharpe ratios or small-game poker win rates as real-world
 performance achievements. The stronger signal is that the framework exposes
 leakage, costs, uncertainty, failed hypotheses, and exploitability.
+
+## Explaining the new microstructure projects
+
+Use the commands and measured evidence in each project README. Before putting a
+claim on a resume, reproduce it on your own machine and be able to explain the
+implementation and at least one limitation without relying on the documentation.
+
+- **Engineering example:** Implemented an integer-tick C++20 order book with
+  price-time matching and indexed cancellation; validated event replay against
+  a reference implementation and measured throughput and processing-latency
+  distributions under seeded workloads.
+- **Trading example:** Built a synthetic execution simulator with queue-ahead
+  depletion, delayed order activation/cancellation, and adverse selection;
+  compared symmetric and inventory-aware quoting on paired event tapes with
+  confidence intervals and explicit inventory accounting.
+
+Questions to prepare:
+
+1. Which operation dominates the order book as price levels and queue depth grow?
+2. What happens to an order lookup when its resting order is partially filled,
+   fully filled, or cancelled?
+3. Which benchmark costs are inside the timed region? How does timing each event
+   perturb the measurement, and why is throughput measured separately?
+4. Can an order fill after its cancellation is requested? Walk through the exact
+   event sequence and explain how the simulator tests it.
+5. Why can spread capture coexist with negative subsequent fill markouts?
+6. What is held constant in the paired comparison, and what does its confidence
+   interval fail to measure about the model itself?
+
+The C++ project is single-threaded. It does not establish lock-free concurrency,
+networking, or production exchange integration experience. The execution lab
+does not establish a profitable strategy on historical or live market data.

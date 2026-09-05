@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 import numpy as np
 import pandas as pd
+from numpy.typing import NDArray
 from scipy.stats import norm
 
 from quantlab.derivatives.black_scholes import black_scholes_delta, black_scholes_price
@@ -66,7 +67,7 @@ def simulate_delta_hedge(
         rate=rate,
         volatility=implied_volatility,
     )
-    shares = np.full(n_paths, initial_delta)
+    shares: NDArray[np.float64] = np.full(n_paths, initial_delta)
     initial_cost = transaction_cost_bps / 10_000 * abs(initial_delta) * spot
     cash = np.full(n_paths, premium - initial_delta * spot - initial_cost)
     accumulated_costs = np.full(n_paths, initial_cost)
